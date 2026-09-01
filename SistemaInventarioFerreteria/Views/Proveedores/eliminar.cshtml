@@ -1,0 +1,31 @@
+@model SistemaInventarioFerreteria.Models.Proveedor
+
+@{
+    ViewData["Title"] = "Eliminar Proveedor";
+}
+
+<div class="formulario-contenedor">
+    <div class="formulario-encabezado">
+        <h1>Eliminar proveedor</h1>
+        <p>Confirma la eliminación del registro seleccionado.</p>
+    </div>
+
+    <div class="formulario-tarjeta">
+        <div asp-validation-summary="ModelOnly" class="texto-error"></div>
+        <div class="mensaje-eliminar">
+            <h2>¿Deseas eliminar este proveedor?</h2>
+            <p>La acción no se puede deshacer y solo será posible si no tiene entradas asociadas.</p>
+        </div>
+
+        <div class="detalle-fila"><span class="detalle-etiqueta">ID</span><span class="detalle-valor">#@Model.IdProveedor</span></div>
+        <div class="detalle-fila"><span class="detalle-etiqueta">Nombre</span><span class="detalle-valor">@Model.Nombre</span></div>
+        <div class="detalle-fila"><span class="detalle-etiqueta">Correo</span><span class="detalle-valor">@(Model.Correo ?? "Sin correo")</span></div>
+
+        <form asp-action="eliminar" asp-route-id="@Model.IdProveedor" method="post">
+            <div class="botones-formulario">
+                <button type="submit" class="boton-eliminar">Eliminar</button>
+                <a asp-action="inicio" class="boton-regresar">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>

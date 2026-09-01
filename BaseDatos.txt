@@ -1,0 +1,312 @@
+CREATE DATABASE InventarioFerreteriaDB
+GO
+
+USE InventarioFerreteriaDB;
+GO
+
+CREATE TABLE Categorias
+(
+    IdCategoria INT IDENTITY(1,1) PRIMARY KEY,
+    Nombre NVARCHAR(100) NOT NULL,
+    Descripcion NVARCHAR(250) NULL,
+    CONSTRAINT UQ_Categorias_Nombre UNIQUE (Nombre)
+);
+GO
+
+CREATE TABLE Marcas
+(
+    IdMarca INT IDENTITY(1,1) PRIMARY KEY,
+    Nombre NVARCHAR(100) NOT NULL,
+    CONSTRAINT UQ_Marcas_Nombre UNIQUE (Nombre)
+);
+GO
+
+CREATE TABLE Productos
+(
+    IdProducto INT IDENTITY(1,1) PRIMARY KEY,
+    Nombre NVARCHAR(150) NOT NULL,
+    Descripcion NVARCHAR(300) NULL,
+    IdCategoria INT NOT NULL,
+    Activo BIT NOT NULL DEFAULT 1,
+    CONSTRAINT FK_Productos_Categorias
+        FOREIGN KEY (IdCategoria)
+        REFERENCES Categorias(IdCategoria)
+);
+GO
+
+CREATE TABLE VariantesProducto
+(
+    IdVariante INT IDENTITY(1,1) PRIMARY KEY,
+    IdProducto INT NOT NULL,
+    IdMarca INT NULL,
+    SKU NVARCHAR(50) NOT NULL,
+    Color NVARCHAR(50) NULL,
+    Tamano NVARCHAR(50) NULL,
+    Material NVARCHAR(80) NULL,
+    Medida NVARCHAR(80) NULL,
+    Presentacion NVARCHAR(100) NULL,
+    PrecioCompra DECIMAL(10,2) NOT NULL,
+    PrecioVenta DECIMAL(10,2) NOT NULL,
+    StockMinimo INT NOT NULL DEFAULT 5,
+    Activo BIT NOT NULL DEFAULT 1,
+    CONSTRAINT UQ_VariantesProducto_SKU UNIQUE (SKU),
+    CONSTRAINT FK_VariantesProducto_Productos
+        FOREIGN KEY (IdProducto)
+        REFERENCES Productos(IdProducto),
+    CONSTRAINT FK_VariantesProducto_Marcas
+        FOREIGN KEY (IdMarca)
+        REFERENCES Marcas(IdMarca)
+);
+GO
+
+CREATE TABLE Sucursales
+(
+    IdSucursal INT IDENTITY(1,1) PRIMARY KEY,
+    Nombre NVARCHAR(120) NOT NULL,
+    Direccion NVARCHAR(250) NULL,
+    Telefono NVARCHAR(20) NULL,
+    Activo BIT NOT NULL DEFAULT 1
+);
+GO
+
+CREATE TABLE Proveedores
+(
+    IdProveedor INT IDENTITY(1,1) PRIMARY KEY,
+    Nombre NVARCHAR(150) NOT NULL,
+    Telefono NVARCHAR(20) NULL,
+    Correo NVARCHAR(120) NULL,
+    Direccion NVARCHAR(250) NULL,
+    TiempoEntregaDias INT NOT NULL DEFAULT 3,
+    Activo BIT NOT NULL DEFAULT 1
+);
+GO
+
+CREATE TABLE Inventarios
+(
+    IdInventario INT IDENTITY(1,1) PRIMARY KEY,
+    IdVariante INT NOT NULL,
+    IdSucursal INT NOT NULL,
+    Cantidad INT NOT NULL DEFAULT 0,
+    CONSTRAINT FK_Inventarios_VariantesProducto
+        FOREIGN KEY (IdVariante)
+        REFERENCES VariantesProducto(IdVariante),
+    CONSTRAINT FK_Inventarios_Sucursales
+        FOREIGN KEY (IdSucursal)
+        REFERENCES Sucursales(IdSucursal),
+    CONSTRAINT UQ_Inventarios_VarianteSucursal
+        UNIQUE (IdVariante, IdSucursal)
+);
+GO
+
+CREATE TABLE EntradasInventario
+(
+    IdEntrada INT IDENTITY(1,1) PRIMARY KEY,
+    IdVariante INT NOT NULL,
+    IdSucursal INT NOT NULL,
+    IdProveedor INT NULL,
+    Cantidad INT NOT NULL,
+    CostoUnitario DECIMAL(10,2) NOT NULL,
+    Fecha DATETIME NOT NULL DEFAULT GETDATE(),
+    CONSTRAINT FK_Entradas_VariantesProducto
+        FOREIGN KEY (IdVariante)
+        REFERENCES VariantesProducto(IdVariante),
+    CONSTRAINT FK_Entradas_Sucursales
+        FOREIGN KEY (IdSucursal)
+        REFERENCES Sucursales(IdSucursal),
+    CONSTRAINT FK_Entradas_Proveedores
+        FOREIGN KEY (IdProveedor)
+        REFERENCES Proveedores(IdProveedor)
+);
+GO
+
+CREATE TABLE Ventas
+(
+    IdVenta INT IDENTITY(1,1) PRIMARY KEY,
+    IdSucursal INT NOT NULL,
+    Fecha DATETIME NOT NULL DEFAULT GETDATE(),
+    Total DECIMAL(10,2) NOT NULL,
+    CONSTRAINT FK_Ventas_Sucursales
+        FOREIGN KEY (IdSucursal)
+        REFERENCES Sucursales(IdSucursal)
+);
+GO
+
+CREATE TABLE DetalleVentas
+(
+    IdDetalleVenta INT IDENTITY(1,1) PRIMARY KEY,
+    IdVenta INT NOT NULL,
+    IdVariante INT NOT NULL,
+    Cantidad INT NOT NULL,
+    PrecioUnitario DECIMAL(10,2) NOT NULL,
+    Subtotal DECIMAL(10,2) NOT NULL,
+    CONSTRAINT FK_DetalleVentas_Ventas
+        FOREIGN KEY (IdVenta)
+        REFERENCES Ventas(IdVenta),
+    CONSTRAINT FK_DetalleVentas_VariantesProducto
+        FOREIGN KEY (IdVariante)
+        REFERENCES VariantesProducto(IdVariante)
+);
+GO
+
+CREATE TABLE MovimientosInventario
+(
+    IdMovimiento INT IDENTITY(1,1) PRIMARY KEY,
+    IdVariante INT NOT NULL,
+    IdSucursal INT NOT NULL,
+    TipoMovimiento NVARCHAR(20) NOT NULL,
+    Cantidad INT NOT NULL,
+    Fecha DATETIME NOT NULL DEFAULT GETDATE(),
+    Descripcion NVARCHAR(250) NULL,
+    CONSTRAINT FK_Movimientos_VariantesProducto
+        FOREIGN KEY (IdVariante)
+        REFERENCES VariantesProducto(IdVariante),
+    CONSTRAINT FK_Movimientos_Sucursales
+        FOREIGN KEY (IdSucursal)
+        REFERENCES Sucursales(IdSucursal)
+);
+GO
+
+CREATE TABLE Alertas
+(
+    IdAlerta INT IDENTITY(1,1) PRIMARY KEY,
+    IdVariante INT NOT NULL,
+    IdSucursal INT NOT NULL,
+    TipoAlerta NVARCHAR(50) NOT NULL,
+    Mensaje NVARCHAR(250) NOT NULL,
+    Fecha DATETIME NOT NULL DEFAULT GETDATE(),
+    Estado NVARCHAR(20) NOT NULL DEFAULT 'Pendiente',
+    CONSTRAINT FK_Alertas_VariantesProducto
+        FOREIGN KEY (IdVariante)
+        REFERENCES VariantesProducto(IdVariante),
+    CONSTRAINT FK_Alertas_Sucursales
+        FOREIGN KEY (IdSucursal)
+        REFERENCES Sucursales(IdSucursal)
+);
+GO
+
+CREATE TABLE Recomendaciones
+(
+    IdRecomendacion INT IDENTITY(1,1) PRIMARY KEY,
+    IdVariante INT NOT NULL,
+    IdSucursal INT NOT NULL,
+    StockActual INT NOT NULL,
+    PromedioVentaDiaria DECIMAL(10,2) NOT NULL,
+    DiasRestantes DECIMAL(10,2) NOT NULL,
+    CantidadRecomendada INT NOT NULL,
+    Fecha DATETIME NOT NULL DEFAULT GETDATE(),
+    CONSTRAINT FK_Recomendaciones_VariantesProducto
+        FOREIGN KEY (IdVariante)
+        REFERENCES VariantesProducto(IdVariante),
+    CONSTRAINT FK_Recomendaciones_Sucursales
+        FOREIGN KEY (IdSucursal)
+        REFERENCES Sucursales(IdSucursal)
+);
+GO
+
+INSERT INTO Categorias (Nombre, Descripcion)
+VALUES
+('Pinturas', 'Pinturas y recubrimientos'),
+('Herramientas', 'Herramientas manuales y electricas'),
+('Electricidad', 'Materiales y accesorios electricos'),
+('Plomeria', 'Productos y accesorios para plomeria'),
+('Construccion', 'Materiales para construccion');
+GO
+
+INSERT INTO Marcas (Nombre)
+VALUES
+('Bosch'),
+('Truper'),
+('Stanley'),
+('Protecto'),
+('DeWalt');
+GO
+
+INSERT INTO Productos (Nombre, Descripcion, IdCategoria)
+VALUES
+('Pintura Latex', 'Pintura para interiores y exteriores', 1),
+('Taladro Electrico', 'Taladro para trabajos generales', 2),
+('Martillo', 'Martillo de uso general', 2),
+('Cable Electrico', 'Cable para instalaciones electricas', 3),
+('Tubo PVC', 'Tubo para instalaciones de agua', 4);
+GO
+
+INSERT INTO VariantesProducto(IdProducto, IdMarca, SKU, Color, Tamano, Material, Medida, Presentacion, PrecioCompra, PrecioVenta, StockMinimo)
+VALUES
+(1, 4, 'PIN-PRO-BLA-1G-001', 'Blanco', '1 galon', NULL, NULL, 'Galon', 18.00, 25.00, 5),
+(2, 1, 'TAL-BOS-500W-001', NULL, '500W', NULL, NULL, 'Unidad', 45.00, 65.00, 3),
+(3, 2, 'MAR-TRU-16OZ-001', NULL, '16 oz', 'Acero', NULL, 'Unidad', 8.00, 12.00, 5),
+(4, 3, 'CAB-STA-12AWG-001', 'Negro', NULL, 'Cobre', '12 AWG', 'Metro', 0.70, 1.20, 20),
+(5, 2, 'PVC-TRU-1IN-001', 'Blanco', NULL, 'PVC', '1 pulgada', 'Unidad', 3.00, 5.00, 10);
+GO
+
+INSERT INTO Sucursales (Nombre, Direccion, Telefono)
+VALUES
+('Sucursal Central', 'San Salvador', '2222-1111'),
+('Sucursal Santa Tecla', 'Santa Tecla', '2222-2222');
+GO
+
+INSERT INTO Proveedores
+(Nombre, Telefono, Correo, Direccion, TiempoEntregaDias)
+VALUES
+('Distribuidora Central', '2233-1000', 'ventas@distribuidoracentral.com', 'San Salvador', 3),
+('FerreDistribuciones', '2233-2000', 'ventas@ferredistribuciones.com', 'Santa Tecla', 5);
+GO
+
+INSERT INTO Inventarios (IdVariante, IdSucursal, Cantidad)
+VALUES
+(1, 1, 20),
+(2, 1, 10),
+(3, 1, 15),
+(4, 1, 100),
+(5, 1, 30),
+(1, 2, 10),
+(2, 2, 5),
+(3, 2, 8);
+GO
+
+INSERT INTO EntradasInventario
+(IdVariante, IdSucursal, IdProveedor, Cantidad, CostoUnitario)
+VALUES
+(1, 1, 1, 20, 18.00),
+(2, 1, 2, 10, 45.00),
+(3, 1, 1, 15, 8.00),
+(4, 1, 2, 100, 0.70),
+(5, 1, 1, 30, 3.00);
+GO
+
+INSERT INTO Ventas (IdSucursal, Total)
+VALUES
+(1, 50.00),
+(1, 65.00),
+(2, 24.00);
+GO
+
+INSERT INTO DetalleVentas
+(IdVenta, IdVariante, Cantidad, PrecioUnitario, Subtotal)
+VALUES
+(1, 1, 2, 25.00, 50.00),
+(2, 2, 1, 65.00, 65.00),
+(3, 3, 2, 12.00, 24.00);
+GO
+
+INSERT INTO MovimientosInventario
+(IdVariante, IdSucursal, TipoMovimiento, Cantidad, Descripcion)
+VALUES
+(1, 1, 'Entrada', 20, 'Ingreso inicial de inventario'),
+(2, 1, 'Entrada', 10, 'Ingreso inicial de inventario'),
+(3, 1, 'Entrada', 15, 'Ingreso inicial de inventario'),
+(1, 1, 'Salida', 2, 'Venta de producto'),
+(2, 1, 'Salida', 1, 'Venta de producto');
+GO
+
+INSERT INTO Alertas
+(IdVariante, IdSucursal, TipoAlerta, Mensaje)
+VALUES
+(2, 2, 'Stock bajo', 'El producto se encuentra cerca del stock minimo');
+GO
+
+INSERT INTO Recomendaciones
+(IdVariante, IdSucursal, StockActual, PromedioVentaDiaria, DiasRestantes, CantidadRecomendada)
+VALUES
+(2, 2, 5, 2.00, 2.50, 10);
+GO

@@ -1,0 +1,62 @@
+@model IEnumerable<SistemaInventarioFerreteria.Models.Categoria>
+
+@{
+    ViewData["Title"] = "Categorías";
+}
+
+<header class="page-header">
+    <div class="page-heading">
+        <span class="eyebrow">Organización</span>
+        <h1>Categorías</h1>
+        <p>Clasifica el catálogo para que cada producto sea fácil de encontrar y administrar.</p>
+    </div>
+    <div class="page-actions">
+        <a asp-action="crear" class="btn btn-primary">
+            <svg class="md-icon"><use href="#icon-plus"></use></svg>
+            Agregar categoría
+        </a>
+    </div>
+</header>
+
+<section class="metric-grid metric-grid-compact" aria-label="Resumen de categorías">
+    <article class="metric-card">
+        <div class="metric-copy"><span class="metric-label">Total categorías</span><strong class="metric-value">@Model.Count()</strong><span class="metric-note">Clasificaciones disponibles</span></div>
+        <span class="metric-icon"><svg class="md-icon"><use href="#icon-category"></use></svg></span>
+    </article>
+</section>
+
+<section class="contenedor-tabla">
+    <div class="titulo-tabla">
+        <div><h2>Listado de categorías</h2><p>Categorías disponibles para clasificar los productos.</p></div>
+        <span class="status-badge status-active">@Model.Count() registros</span>
+    </div>
+    <div class="table-scroll">
+        <table class="data-table">
+            <thead><tr><th>ID</th><th>Nombre</th><th>Descripción</th><th>Acciones</th></tr></thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr><td colspan="4" class="empty-state"><strong>Aún no hay categorías</strong>Crea una categoría para empezar a clasificar los productos.</td></tr>
+                }
+                else
+                {
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="entity-id">#@item.IdCategoria</td>
+                            <td><div class="entity-cell"><span class="entity-avatar">@item.Nombre.Substring(0, 1).ToUpper()</span><strong>@item.Nombre</strong></div></td>
+                            <td class="muted-text">@(string.IsNullOrWhiteSpace(item.Descripcion) ? "Sin descripción" : item.Descripcion)</td>
+                            <td>
+                                <div class="table-actions">
+                                    <a asp-action="detalles" asp-route-id="@item.IdCategoria" class="action-button action-view" aria-label="Ver @item.Nombre"><svg class="md-icon"><use href="#icon-view"></use></svg><span>Ver</span></a>
+                                    <a asp-action="editar" asp-route-id="@item.IdCategoria" class="action-button action-edit" aria-label="Editar @item.Nombre"><svg class="md-icon"><use href="#icon-edit"></use></svg><span>Editar</span></a>
+                                    <a asp-action="eliminar" asp-route-id="@item.IdCategoria" class="action-button action-delete" aria-label="Eliminar @item.Nombre"><svg class="md-icon"><use href="#icon-delete"></use></svg><span>Eliminar</span></a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</section>

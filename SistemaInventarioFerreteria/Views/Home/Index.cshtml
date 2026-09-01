@@ -1,0 +1,164 @@
+@model SistemaInventarioFerreteria.Models.Dashboard
+
+@{
+    ViewData["Title"] = "Inicio";
+}
+
+<header class="page-header">
+    <div class="page-heading">
+        <span class="eyebrow">Panel general</span>
+        <h1>Todo tu inventario, en orden.</h1>
+        <p>Una vista clara del catálogo, las existencias y los recursos principales de la ferretería.</p>
+    </div>
+    <div class="page-actions">
+        <a asp-controller="Productos" asp-action="crear" class="btn btn-primary">
+            <svg class="md-icon"><use href="#icon-plus"></use></svg>
+            Nuevo producto
+        </a>
+    </div>
+</header>
+
+<section class="metric-grid dashboard-metrics" aria-label="Resumen del inventario">
+    <article class="metric-card">
+        <div class="metric-copy">
+            <span class="metric-label">Productos</span>
+            <strong class="metric-value">@Model.TotalProductos</strong>
+            <span class="metric-note">Registrados en el catálogo</span>
+        </div>
+        <span class="metric-icon"><svg class="md-icon"><use href="#icon-package"></use></svg></span>
+    </article>
+
+    <article class="metric-card">
+        <div class="metric-copy">
+            <span class="metric-label">Existencias</span>
+            <strong class="metric-value">@Model.TotalExistencias</strong>
+            <span class="metric-note">Unidades disponibles</span>
+        </div>
+        <span class="metric-icon"><svg class="md-icon"><use href="#icon-in"></use></svg></span>
+    </article>
+
+    <article class="metric-card">
+        <div class="metric-copy">
+            <span class="metric-label">Stock bajo</span>
+            <strong class="metric-value">@Model.StockBajo</strong>
+            <span class="metric-note">Registros por revisar</span>
+        </div>
+        <span class="metric-icon"><svg class="md-icon"><use href="#icon-warning"></use></svg></span>
+    </article>
+
+    <article class="metric-card">
+        <div class="metric-copy">
+            <span class="metric-label">Categorías</span>
+            <strong class="metric-value">@Model.TotalCategorias</strong>
+            <span class="metric-note">Clasificaciones activas</span>
+        </div>
+        <span class="metric-icon"><svg class="md-icon"><use href="#icon-category"></use></svg></span>
+    </article>
+
+    <article class="metric-card">
+        <div class="metric-copy">
+            <span class="metric-label">Proveedores</span>
+            <strong class="metric-value">@Model.TotalProveedores</strong>
+            <span class="metric-note">Contactos registrados</span>
+        </div>
+        <span class="metric-icon"><svg class="md-icon"><use href="#icon-suppliers"></use></svg></span>
+    </article>
+
+    <article class="metric-card">
+        <div class="metric-copy">
+            <span class="metric-label">Sucursales</span>
+            <strong class="metric-value">@Model.TotalSucursales</strong>
+            <span class="metric-note">Ubicaciones registradas</span>
+        </div>
+        <span class="metric-icon"><svg class="md-icon"><use href="#icon-branch"></use></svg></span>
+    </article>
+</section>
+
+<section class="dashboard-layout">
+    <article class="panel-inicio">
+        <div class="titulo-panel">
+            <div>
+                <h2>Control de inventario</h2>
+                <p>Indicadores clave para revisar el estado actual.</p>
+            </div>
+            <a asp-controller="Productos" asp-action="inicio" class="section-link">
+                Ver productos
+                <svg class="md-icon"><use href="#icon-arrow"></use></svg>
+            </a>
+        </div>
+
+        <div class="insight-list">
+            <div class="insight-row">
+                <span class="row-icon"><svg class="md-icon"><use href="#icon-package"></use></svg></span>
+                <div><strong>Productos registrados</strong><span>Elementos disponibles en el catálogo.</span></div>
+                <span class="row-value">@Model.TotalProductos</span>
+            </div>
+            <div class="insight-row">
+                <span class="row-icon"><svg class="md-icon"><use href="#icon-in"></use></svg></span>
+                <div><strong>Existencias actuales</strong><span>Total de unidades almacenadas.</span></div>
+                <span class="row-value">@Model.TotalExistencias</span>
+            </div>
+            <div class="insight-row">
+                <span class="row-icon"><svg class="md-icon"><use href="#icon-warning"></use></svg></span>
+                <div><strong>Productos con stock bajo</strong><span>Registros que necesitan revisión.</span></div>
+                <span class="status-badge status-warning">@Model.StockBajo por revisar</span>
+            </div>
+            <div class="insight-row">
+                <span class="row-icon"><svg class="md-icon"><use href="#icon-branch"></use></svg></span>
+                <div><strong>Sucursales</strong><span>Ubicaciones conectadas al sistema.</span></div>
+                <span class="row-value">@Model.TotalSucursales</span>
+            </div>
+        </div>
+    </article>
+
+    <article class="panel-inicio feature-panel">
+        <div class="titulo-panel">
+            <div>
+                <h2>Acciones rápidas</h2>
+                <p>Empieza una tarea frecuente.</p>
+            </div>
+        </div>
+
+        <div class="acciones-rapidas">
+            <a asp-controller="Productos" asp-action="crear" class="accion">
+                <span class="accion-icono"><svg class="md-icon"><use href="#icon-plus"></use></svg></span>
+                <div><strong>Agregar producto</strong><span>Registrar en el catálogo</span></div>
+            </a>
+            <a asp-controller="Categorias" asp-action="crear" class="accion">
+                <span class="accion-icono"><svg class="md-icon"><use href="#icon-category"></use></svg></span>
+                <div><strong>Nueva categoría</strong><span>Crear una clasificación</span></div>
+            </a>
+            <a href="#" class="accion is-coming" aria-disabled="true">
+                <span class="accion-icono"><svg class="md-icon"><use href="#icon-in"></use></svg></span>
+                <div><strong>Registrar entrada</strong><span>Próximamente</span></div>
+            </a>
+            <a asp-controller="Proveedores" asp-action="crear" class="accion">
+                <span class="accion-icono"><svg class="md-icon"><use href="#icon-suppliers"></use></svg></span>
+                <div><strong>Nuevo proveedor</strong><span>Agregar un contacto</span></div>
+            </a>
+        </div>
+    </article>
+</section>
+
+<section class="contenedor-tabla">
+    <div class="titulo-tabla">
+        <div>
+            <h2>Resumen del sistema</h2>
+            <p>Información almacenada actualmente en la base de datos.</p>
+        </div>
+        <span class="status-badge status-active">Módulos activos</span>
+    </div>
+    <div class="table-scroll">
+        <table class="data-table">
+            <thead>
+                <tr><th>Módulo</th><th>Total</th><th>Estado</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><div class="entity-cell"><span class="entity-avatar"><svg class="md-icon"><use href="#icon-package"></use></svg></span><strong>Productos</strong></div></td><td>@Model.TotalProductos</td><td><span class="status-badge status-active">Activo</span></td></tr>
+                <tr><td><div class="entity-cell"><span class="entity-avatar"><svg class="md-icon"><use href="#icon-category"></use></svg></span><strong>Categorías</strong></div></td><td>@Model.TotalCategorias</td><td><span class="status-badge status-active">Activo</span></td></tr>
+                <tr><td><div class="entity-cell"><span class="entity-avatar"><svg class="md-icon"><use href="#icon-suppliers"></use></svg></span><strong>Proveedores</strong></div></td><td>@Model.TotalProveedores</td><td><span class="status-badge status-active">Activo</span></td></tr>
+                <tr><td><div class="entity-cell"><span class="entity-avatar"><svg class="md-icon"><use href="#icon-branch"></use></svg></span><strong>Sucursales</strong></div></td><td>@Model.TotalSucursales</td><td><span class="status-badge status-active">Activo</span></td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>

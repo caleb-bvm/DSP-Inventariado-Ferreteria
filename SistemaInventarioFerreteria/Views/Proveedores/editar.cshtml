@@ -1,0 +1,54 @@
+@model SistemaInventarioFerreteria.Models.Proveedor
+
+@{
+    ViewData["Title"] = "Editar Proveedor";
+}
+
+<div class="formulario-contenedor">
+    <div class="formulario-encabezado">
+        <h1>Editar proveedor</h1>
+        <p>Actualiza los datos del proveedor seleccionado.</p>
+    </div>
+
+    <div class="formulario-tarjeta">
+        <form asp-action="editar" asp-route-id="@Model.IdProveedor" method="post">
+            <input type="hidden" asp-for="IdProveedor" />
+            <div asp-validation-summary="ModelOnly" class="texto-error"></div>
+
+            <div class="campo">
+                <label asp-for="Nombre">Nombre del proveedor</label>
+                <input asp-for="Nombre" maxlength="150" />
+                <span asp-validation-for="Nombre" class="texto-error"></span>
+            </div>
+            <div class="campo">
+                <label asp-for="Telefono">Teléfono</label>
+                <input asp-for="Telefono" type="tel" maxlength="20" />
+                <span asp-validation-for="Telefono" class="texto-error"></span>
+            </div>
+            <div class="campo">
+                <label asp-for="Correo">Correo electrónico</label>
+                <input asp-for="Correo" type="email" maxlength="120" />
+                <span asp-validation-for="Correo" class="texto-error"></span>
+            </div>
+            <div class="campo">
+                <label asp-for="Direccion">Dirección</label>
+                <textarea asp-for="Direccion" maxlength="250"></textarea>
+                <span asp-validation-for="Direccion" class="texto-error"></span>
+            </div>
+            <div class="campo">
+                <label asp-for="TiempoEntregaDias">Tiempo de entrega (días)</label>
+                <input asp-for="TiempoEntregaDias" type="number" min="0" max="365" />
+                <span asp-validation-for="TiempoEntregaDias" class="texto-error"></span>
+            </div>
+            <div class="campo-check">
+                <input asp-for="Activo" type="checkbox" />
+                <label asp-for="Activo">Proveedor activo</label>
+            </div>
+
+            <div class="botones-formulario">
+                <button type="submit" class="boton-guardar">Guardar cambios</button>
+                <a asp-action="inicio" class="boton-regresar">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>

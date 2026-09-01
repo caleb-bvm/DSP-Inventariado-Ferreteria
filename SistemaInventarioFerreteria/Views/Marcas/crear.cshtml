@@ -1,0 +1,29 @@
+@model SistemaInventarioFerreteria.Models.Marca
+
+@{
+    ViewData["Title"] = "Nueva Marca";
+}
+
+<div class="formulario-contenedor">
+    <div class="formulario-encabezado">
+        <h1>Nueva marca</h1>
+        <p>Registra una nueva marca para los productos del inventario.</p>
+    </div>
+
+    <div class="formulario-tarjeta">
+        <form asp-action="crear" method="post">
+            <div asp-validation-summary="ModelOnly" class="texto-error"></div>
+
+            <div class="campo">
+                <label asp-for="Nombre">Nombre de la marca</label>
+                <input asp-for="Nombre" placeholder="Ejemplo: Bosch" maxlength="100" />
+                <span asp-validation-for="Nombre" class="texto-error"></span>
+            </div>
+
+            <div class="botones-formulario">
+                <button type="submit" class="boton-guardar">Guardar marca</button>
+                <a asp-action="inicio" class="boton-regresar">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,58 @@
+@model IEnumerable<SistemaInventarioFerreteria.Models.Marca>
+
+@{
+    ViewData["Title"] = "Marcas";
+}
+
+<header class="page-header">
+    <div class="page-heading">
+        <span class="eyebrow">Catálogo</span>
+        <h1>Marcas</h1>
+        <p>Administra las marcas asociadas a los productos del inventario.</p>
+    </div>
+    <div class="page-actions">
+        <a asp-action="crear" class="btn btn-primary"><svg class="md-icon"><use href="#icon-plus"></use></svg>Agregar marca</a>
+    </div>
+</header>
+
+<section class="metric-grid metric-grid-compact" aria-label="Resumen de marcas">
+    <article class="metric-card">
+        <div class="metric-copy"><span class="metric-label">Total marcas</span><strong class="metric-value">@Model.Count()</strong><span class="metric-note">Fabricantes registrados</span></div>
+        <span class="metric-icon"><svg class="md-icon"><use href="#icon-brand"></use></svg></span>
+    </article>
+</section>
+
+<section class="contenedor-tabla">
+    <div class="titulo-tabla">
+        <div><h2>Listado de marcas</h2><p>Consulta y administra las marcas registradas.</p></div>
+        <span class="status-badge status-active">@Model.Count() registros</span>
+    </div>
+    <div class="table-scroll">
+        <table class="data-table">
+            <thead><tr><th>ID</th><th>Marca</th><th>Acciones</th></tr></thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr><td colspan="3" class="empty-state"><strong>Aún no hay marcas</strong>Agrega la primera marca para asociarla a los productos.</td></tr>
+                }
+                else
+                {
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="entity-id">#@item.IdMarca</td>
+                            <td><div class="entity-cell"><span class="entity-avatar">@item.Nombre.Substring(0, 1).ToUpper()</span><strong>@item.Nombre</strong></div></td>
+                            <td>
+                                <div class="table-actions">
+                                    <a asp-action="detalles" asp-route-id="@item.IdMarca" class="action-button action-view" aria-label="Ver @item.Nombre"><svg class="md-icon"><use href="#icon-view"></use></svg><span>Ver</span></a>
+                                    <a asp-action="editar" asp-route-id="@item.IdMarca" class="action-button action-edit" aria-label="Editar @item.Nombre"><svg class="md-icon"><use href="#icon-edit"></use></svg><span>Editar</span></a>
+                                    <a asp-action="eliminar" asp-route-id="@item.IdMarca" class="action-button action-delete" aria-label="Eliminar @item.Nombre"><svg class="md-icon"><use href="#icon-delete"></use></svg><span>Eliminar</span></a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</section>

@@ -1,0 +1,110 @@
+﻿@model SistemaInventarioFerreteria.Models.Productos
+
+@{
+    ViewData["Title"] = "Editar Producto";
+}
+
+<div class="formulario-contenedor">
+
+    <div class="formulario-encabezado">
+
+        <h1>Editar producto</h1>
+
+        <p>
+            Modifica la información del producto seleccionado.
+        </p>
+
+    </div>
+
+    <div class="formulario-tarjeta">
+
+        <form asp-action="editar"
+              asp-route-id="@Model.IdProducto"
+              method="post">
+
+            <input type="hidden"
+                   asp-for="IdProducto" />
+
+            <div asp-validation-summary="ModelOnly"
+                 class="texto-error">
+            </div>
+
+            <div class="campo">
+
+                <label asp-for="Nombre">
+                    Nombre del producto
+                </label>
+
+                <input asp-for="Nombre" />
+
+                <span asp-validation-for="Nombre"
+                      class="texto-error">
+                </span>
+
+            </div>
+
+            <div class="campo">
+
+                <label asp-for="Descripcion">
+                    Descripción
+                </label>
+
+                <textarea asp-for="Descripcion"></textarea>
+
+                <span asp-validation-for="Descripcion"
+                      class="texto-error">
+                </span>
+
+            </div>
+
+            <div class="campo">
+
+                <label asp-for="IdCategoria">
+                    Categoría
+                </label>
+
+                <select asp-for="IdCategoria"
+                        asp-items="ViewBag.Categorias">
+
+                    <option value="">
+                        Seleccione una categoría
+                    </option>
+
+                </select>
+
+                <span asp-validation-for="IdCategoria"
+                      class="texto-error">
+                </span>
+
+            </div>
+
+            <div class="campo-check">
+
+                <input asp-for="Activo"
+                       type="checkbox" />
+
+                <label asp-for="Activo">
+                    Producto activo
+                </label>
+
+            </div>
+
+            <div class="botones-formulario">
+
+                <button type="submit"
+                        class="boton-guardar">
+                    Guardar cambios
+                </button>
+
+                <a asp-action="inicio"
+                   class="boton-regresar">
+                    Cancelar
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>

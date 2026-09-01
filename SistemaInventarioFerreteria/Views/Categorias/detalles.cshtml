@@ -1,0 +1,74 @@
+﻿@model SistemaInventarioFerreteria.Models.Categoria
+
+@{
+    ViewData["Title"] = "Detalles de Categoría";
+}
+
+<div class="formulario-contenedor">
+
+    <div class="formulario-encabezado">
+
+        <h1>Detalles de categoría</h1>
+
+        <p>
+            Información registrada de la categoría.
+        </p>
+
+    </div>
+
+    <div class="formulario-tarjeta">
+
+        <div class="detalle-grupo">
+
+            <span>
+                ID de categoría
+            </span>
+
+            <strong>
+                #@Model.IdCategoria
+            </strong>
+
+        </div>
+
+        <div class="detalle-grupo">
+
+            <span>
+                Nombre
+            </span>
+
+            <strong>
+                @Model.Nombre
+            </strong>
+
+        </div>
+
+        <div class="detalle-grupo">
+
+            <span>
+                Descripción
+            </span>
+
+            <strong>
+                @Model.Descripcion
+            </strong>
+
+        </div>
+
+        <div class="botones-formulario">
+
+            <a asp-action="editar"
+               asp-route-id="@Model.IdCategoria"
+               class="boton-guardar">
+                Editar
+            </a>
+
+            <a asp-action="inicio"
+               class="boton-regresar">
+                Regresar
+            </a>
+
+        </div>
+
+    </div>
+
+</div>

@@ -1,0 +1,135 @@
+﻿@model SistemaInventarioFerreteria.Models.Productos
+
+@{
+    ViewData["Title"] = "Eliminar Producto";
+}
+
+<div class="formulario-contenedor">
+
+    <div class="formulario-encabezado">
+
+        <h1>Eliminar producto</h1>
+
+        <p>
+            Confirma si deseas eliminar este producto del sistema.
+        </p>
+
+    </div>
+
+    <div class="formulario-tarjeta">
+
+        <div class="mensaje-eliminar">
+
+            <h2>¿Estás seguro de eliminar este producto?</h2>
+
+            <p>
+                Esta acción no se puede deshacer.
+            </p>
+
+        </div>
+
+        <div class="detalle-fila">
+
+            <span class="detalle-etiqueta">
+                ID
+            </span>
+
+            <span class="detalle-valor">
+                @Model.IdProducto
+            </span>
+
+        </div>
+
+        <div class="detalle-fila">
+
+            <span class="detalle-etiqueta">
+                Nombre
+            </span>
+
+            <span class="detalle-valor">
+                @Model.Nombre
+            </span>
+
+        </div>
+
+        <div class="detalle-fila">
+
+            <span class="detalle-etiqueta">
+                Descripción
+            </span>
+
+            <span class="detalle-valor">
+
+                @if (string.IsNullOrEmpty(Model.Descripcion))
+                {
+                    <span>Sin descripción</span>
+                }
+                else
+                {
+                    @Model.Descripcion
+                }
+
+            </span>
+
+        </div>
+
+        <div class="detalle-fila">
+
+            <span class="detalle-etiqueta">
+                Categoría
+            </span>
+
+            <span class="detalle-valor">
+                @Model.Categoria?.Nombre
+            </span>
+
+        </div>
+
+        <div class="detalle-fila">
+
+            <span class="detalle-etiqueta">
+                Estado
+            </span>
+
+            <span class="detalle-valor">
+
+                @if (Model.Activo)
+                {
+                    <span class="estado-activo">
+                        Activo
+                    </span>
+                }
+                else
+                {
+                    <span class="estado-inactivo">
+                        Inactivo
+                    </span>
+                }
+
+            </span>
+
+        </div>
+
+        <form asp-action="eliminar"
+              asp-route-id="@Model.IdProducto"
+              method="post">
+
+            <div class="botones-formulario">
+
+                <button type="submit"
+                        class="boton-eliminar">
+                    Eliminar producto
+                </button>
+
+                <a asp-action="inicio"
+                   class="boton-regresar">
+                    Cancelar
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>

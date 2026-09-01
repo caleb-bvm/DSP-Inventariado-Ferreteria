@@ -1,0 +1,74 @@
+﻿@model SistemaInventarioFerreteria.Models.Categoria
+
+@{
+    ViewData["Title"] = "Nueva Categoría";
+}
+
+<div class="formulario-contenedor">
+
+    <div class="formulario-encabezado">
+        <h1>Nueva categoría</h1>
+
+        <p>
+            Registra una nueva categoría para clasificar
+            los productos del inventario.
+        </p>
+    </div>
+
+    <div class="formulario-tarjeta">
+
+        <form asp-action="crear" method="post">
+
+            <div asp-validation-summary="ModelOnly"
+                 class="texto-error">
+            </div>
+
+            <div class="campo">
+
+                <label asp-for="Nombre">
+                    Nombre de la categoría
+                </label>
+
+                <input asp-for="Nombre"
+                       placeholder="Ejemplo: Herramientas" />
+
+                <span asp-validation-for="Nombre"
+                      class="texto-error">
+                </span>
+
+            </div>
+
+            <div class="campo">
+
+                <label asp-for="Descripcion">
+                    Descripción
+                </label>
+
+                <textarea asp-for="Descripcion"
+                          placeholder="Escriba una descripción de la categoría"></textarea>
+
+                <span asp-validation-for="Descripcion"
+                      class="texto-error">
+                </span>
+
+            </div>
+
+            <div class="botones-formulario">
+
+                <button type="submit"
+                        class="boton-guardar">
+                    Guardar categoría
+                </button>
+
+                <a asp-action="inicio"
+                   class="boton-regresar">
+                    Cancelar
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>

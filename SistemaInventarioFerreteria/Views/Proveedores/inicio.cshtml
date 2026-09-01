@@ -1,0 +1,70 @@
+@model IEnumerable<SistemaInventarioFerreteria.Models.Proveedor>
+
+@{
+    ViewData["Title"] = "Proveedores";
+}
+
+<header class="page-header">
+    <div class="page-heading">
+        <span class="eyebrow">Abastecimiento</span>
+        <h1>Proveedores</h1>
+        <p>Gestiona contactos, tiempos de entrega y disponibilidad de tus proveedores.</p>
+    </div>
+    <div class="page-actions">
+        <a asp-action="crear" class="btn btn-primary"><svg class="md-icon"><use href="#icon-plus"></use></svg>Agregar proveedor</a>
+    </div>
+</header>
+
+<section class="metric-grid" aria-label="Resumen de proveedores">
+    <article class="metric-card">
+        <div class="metric-copy"><span class="metric-label">Total proveedores</span><strong class="metric-value">@Model.Count()</strong><span class="metric-note">Contactos registrados</span></div>
+        <span class="metric-icon"><svg class="md-icon"><use href="#icon-suppliers"></use></svg></span>
+    </article>
+    <article class="metric-card">
+        <div class="metric-copy"><span class="metric-label">Proveedores activos</span><strong class="metric-value">@Model.Count(p => p.Activo)</strong><span class="metric-note">Disponibles para operar</span></div>
+        <span class="metric-icon"><svg class="md-icon"><use href="#icon-check"></use></svg></span>
+    </article>
+    <article class="metric-card">
+        <div class="metric-copy"><span class="metric-label">Proveedores inactivos</span><strong class="metric-value">@Model.Count(p => !p.Activo)</strong><span class="metric-note">Fuera de operación</span></div>
+        <span class="metric-icon"><svg class="md-icon"><use href="#icon-warning"></use></svg></span>
+    </article>
+</section>
+
+<section class="contenedor-tabla">
+    <div class="titulo-tabla">
+        <div><h2>Listado de proveedores</h2><p>Datos de contacto y condiciones de entrega.</p></div>
+        <span class="status-badge status-active">@Model.Count() registros</span>
+    </div>
+    <div class="table-scroll">
+        <table class="data-table">
+            <thead><tr><th>ID</th><th>Proveedor</th><th>Teléfono</th><th>Correo</th><th>Entrega</th><th>Estado</th><th>Acciones</th></tr></thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr><td colspan="7" class="empty-state"><strong>Aún no hay proveedores</strong>Agrega un proveedor para gestionar el abastecimiento.</td></tr>
+                }
+                else
+                {
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="entity-id">#@item.IdProveedor</td>
+                            <td><div class="entity-cell"><span class="entity-avatar">@item.Nombre.Substring(0, 1).ToUpper()</span><strong>@item.Nombre</strong></div></td>
+                            <td>@(item.Telefono ?? "Sin teléfono")</td>
+                            <td>@(item.Correo ?? "Sin correo")</td>
+                            <td>@item.TiempoEntregaDias días</td>
+                            <td>@if (item.Activo) { <span class="status-badge status-active">Activo</span> } else { <span class="status-badge status-inactive">Inactivo</span> }</td>
+                            <td>
+                                <div class="table-actions">
+                                    <a asp-action="detalles" asp-route-id="@item.IdProveedor" class="action-button action-view" aria-label="Ver @item.Nombre"><svg class="md-icon"><use href="#icon-view"></use></svg><span>Ver</span></a>
+                                    <a asp-action="editar" asp-route-id="@item.IdProveedor" class="action-button action-edit" aria-label="Editar @item.Nombre"><svg class="md-icon"><use href="#icon-edit"></use></svg><span>Editar</span></a>
+                                    <a asp-action="eliminar" asp-route-id="@item.IdProveedor" class="action-button action-delete" aria-label="Eliminar @item.Nombre"><svg class="md-icon"><use href="#icon-delete"></use></svg><span>Eliminar</span></a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</section>

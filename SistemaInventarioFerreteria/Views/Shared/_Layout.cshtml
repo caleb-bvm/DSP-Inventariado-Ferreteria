@@ -1,0 +1,135 @@
+@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString() ?? "Home";
+    string NavClass(string controller) =>
+        string.Equals(currentController, controller, StringComparison.OrdinalIgnoreCase)
+            ? "nav-item is-active"
+            : "nav-item";
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0b57d0" />
+    <meta name="description" content="Gestión centralizada del inventario de ferretería." />
+    <title>@ViewData["Title"] · Inventario Ferretería</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <a class="skip-link" href="#contenido-principal">Saltar al contenido</a>
+
+    <svg class="icon-sprite" aria-hidden="true">
+        <symbol id="icon-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16" /></symbol>
+        <symbol id="icon-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18" /></symbol>
+        <symbol id="icon-home" viewBox="0 0 24 24"><path d="m3.5 10 8.5-7 8.5 7v10H15v-6H9v6H3.5V10Z" /></symbol>
+        <symbol id="icon-package" viewBox="0 0 24 24"><path d="m4 7 8-4 8 4-8 4-8-4Z" /><path d="m4 7 8 4 8-4v10l-8 4-8-4V7Zm8 4v10" /></symbol>
+        <symbol id="icon-category" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2" /><rect x="14" y="3" width="7" height="7" rx="3.5" /><rect x="3" y="14" width="7" height="7" rx="3.5" /><path d="M14 14h7v7h-7z" /></symbol>
+        <symbol id="icon-brand" viewBox="0 0 24 24"><path d="M20 13.5 13.5 20a2.1 2.1 0 0 1-3 0L4 13.5V4h9.5l6.5 6.5a2.1 2.1 0 0 1 0 3Z" /><circle cx="8.5" cy="8.5" r="1.2" /></symbol>
+        <symbol id="icon-suppliers" viewBox="0 0 24 24"><path d="M4 20V8l8-4 8 4v12M8 20v-5h8v5M8 10h.01M12 10h.01M16 10h.01" /></symbol>
+        <symbol id="icon-branch" viewBox="0 0 24 24"><path d="M4 21V7l8-4 8 4v14M8 21v-5h8v5M8 10h2M14 10h2" /></symbol>
+        <symbol id="icon-in" viewBox="0 0 24 24"><path d="M12 3v13m-5-5 5 5 5-5M4 21h16" /></symbol>
+        <symbol id="icon-out" viewBox="0 0 24 24"><path d="M12 18V5m-5 5 5-5 5 5M4 21h16" /></symbol>
+        <symbol id="icon-movement" viewBox="0 0 24 24"><path d="M4 8h14m-4-4 4 4-4 4M20 16H6m4 4-4-4 4-4" /></symbol>
+        <symbol id="icon-report" viewBox="0 0 24 24"><path d="M5 3h14v18H5zM9 16v-4m3 4V8m3 8v-6" /></symbol>
+        <symbol id="icon-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" /></symbol>
+        <symbol id="icon-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-5-5 5 5-5 5" /></symbol>
+        <symbol id="icon-edit" viewBox="0 0 24 24"><path d="m4 16-.5 4.5L8 20l11-11-4-4L4 16Zm9.5-9.5 4 4" /></symbol>
+        <symbol id="icon-view" viewBox="0 0 24 24"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z" /><circle cx="12" cy="12" r="2.5" /></symbol>
+        <symbol id="icon-delete" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3m3 0-1 14H7L6 7m4 4v6m4-6v6" /></symbol>
+        <symbol id="icon-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6" /></symbol>
+        <symbol id="icon-warning" viewBox="0 0 24 24"><path d="M12 3 2.5 20h19L12 3Zm0 6v5m0 3h.01" /></symbol>
+    </svg>
+
+    <div class="app-shell">
+        <aside class="app-sidebar" id="app-navigation" aria-label="Navegación principal">
+            <div class="brand-lockup">
+                <div class="brand-mark" aria-hidden="true">
+                    <svg class="md-icon md-icon-lg"><use href="#icon-package"></use></svg>
+                </div>
+                <div class="brand-copy">
+                    <strong>Inventario</strong>
+                    <span>Ferretería</span>
+                </div>
+                <button class="icon-button sidebar-close" type="button" data-nav-close aria-label="Cerrar menú">
+                    <svg class="md-icon"><use href="#icon-close"></use></svg>
+                </button>
+            </div>
+
+            <div class="nav-label">Espacio de trabajo</div>
+            <nav class="nav-list">
+                <a asp-controller="Home" asp-action="Index" class="@NavClass("Home")">
+                    <svg class="md-icon"><use href="#icon-home"></use></svg><span>Inicio</span>
+                </a>
+                <a asp-controller="Productos" asp-action="inicio" class="@NavClass("Productos")">
+                    <svg class="md-icon"><use href="#icon-package"></use></svg><span>Productos</span>
+                </a>
+                <a asp-controller="Categorias" asp-action="inicio" class="@NavClass("Categorias")">
+                    <svg class="md-icon"><use href="#icon-category"></use></svg><span>Categorías</span>
+                </a>
+                <a asp-controller="Marcas" asp-action="inicio" class="@NavClass("Marcas")">
+                    <svg class="md-icon"><use href="#icon-brand"></use></svg><span>Marcas</span>
+                </a>
+                <a asp-controller="Proveedores" asp-action="inicio" class="@NavClass("Proveedores")">
+                    <svg class="md-icon"><use href="#icon-suppliers"></use></svg><span>Proveedores</span>
+                </a>
+                <a asp-controller="Sucursales" asp-action="inicio" class="@NavClass("Sucursales")">
+                    <svg class="md-icon"><use href="#icon-branch"></use></svg><span>Sucursales</span>
+                </a>
+            </nav>
+
+            <div class="nav-label nav-label-spaced">Operaciones</div>
+            <nav class="nav-list" aria-label="Próximas funciones">
+                <a href="#" class="nav-item is-disabled" aria-disabled="true" title="Próximamente">
+                    <svg class="md-icon"><use href="#icon-in"></use></svg><span>Entradas</span><small>Pronto</small>
+                </a>
+                <a href="#" class="nav-item is-disabled" aria-disabled="true" title="Próximamente">
+                    <svg class="md-icon"><use href="#icon-out"></use></svg><span>Salidas</span><small>Pronto</small>
+                </a>
+                <a href="#" class="nav-item is-disabled" aria-disabled="true" title="Próximamente">
+                    <svg class="md-icon"><use href="#icon-movement"></use></svg><span>Movimientos</span><small>Pronto</small>
+                </a>
+                <a href="#" class="nav-item is-disabled" aria-disabled="true" title="Próximamente">
+                    <svg class="md-icon"><use href="#icon-report"></use></svg><span>Reportes</span><small>Pronto</small>
+                </a>
+            </nav>
+
+            <div class="account-card">
+                <div class="account-avatar" aria-hidden="true">AD</div>
+                <div><strong>Administrador</strong><span>Gestión general</span></div>
+                <span class="online-dot" title="Sesión activa"></span>
+            </div>
+        </aside>
+
+        <button class="nav-scrim" type="button" data-nav-close aria-label="Cerrar menú"></button>
+
+        <div class="app-stage">
+            <header class="top-app-bar">
+                <button class="icon-button nav-toggle" type="button" data-nav-open aria-controls="app-navigation" aria-expanded="false" aria-label="Abrir menú">
+                    <svg class="md-icon"><use href="#icon-menu"></use></svg>
+                </button>
+                <div class="mobile-brand">
+                    <span class="mobile-brand-mark"><svg class="md-icon"><use href="#icon-package"></use></svg></span>
+                    <span>Inventario</span>
+                </div>
+                <div class="topbar-context">
+                    <span>Sistema de inventario</span>
+                    <strong>@ViewData["Title"]</strong>
+                </div>
+                <div class="topbar-actions">
+                    <span class="topbar-chip"><span class="online-dot"></span> Operando</span>
+                    <div class="topbar-avatar" aria-label="Perfil de Administrador">AD</div>
+                </div>
+            </header>
+
+            <main class="app-content" id="contenido-principal" tabindex="-1">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

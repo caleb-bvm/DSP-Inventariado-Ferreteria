@@ -1,0 +1,37 @@
+@model SistemaInventarioFerreteria.Models.Sucursal
+
+@{
+    ViewData["Title"] = "Detalles de Sucursal";
+}
+
+<div class="formulario-contenedor">
+    <div class="formulario-encabezado">
+        <h1>Detalles de la sucursal</h1>
+        <p>Consulta la información registrada de la sucursal.</p>
+    </div>
+
+    <div class="formulario-tarjeta">
+        <div class="detalle-fila"><span class="detalle-etiqueta">ID</span><span class="detalle-valor">#@Model.IdSucursal</span></div>
+        <div class="detalle-fila"><span class="detalle-etiqueta">Nombre</span><span class="detalle-valor">@Model.Nombre</span></div>
+        <div class="detalle-fila"><span class="detalle-etiqueta">Dirección</span><span class="detalle-valor">@(Model.Direccion ?? "Sin dirección")</span></div>
+        <div class="detalle-fila"><span class="detalle-etiqueta">Teléfono</span><span class="detalle-valor">@(Model.Telefono ?? "Sin teléfono")</span></div>
+        <div class="detalle-fila">
+            <span class="detalle-etiqueta">Estado</span>
+            <span class="detalle-valor">
+                @if (Model.Activo)
+                {
+                    <span class="estado-activo">Activa</span>
+                }
+                else
+                {
+                    <span class="estado-inactivo">Inactiva</span>
+                }
+            </span>
+        </div>
+
+        <div class="botones-formulario">
+            <a asp-action="editar" asp-route-id="@Model.IdSucursal" class="boton-guardar">Editar</a>
+            <a asp-action="inicio" class="boton-regresar">Regresar</a>
+        </div>
+    </div>
+</div>
