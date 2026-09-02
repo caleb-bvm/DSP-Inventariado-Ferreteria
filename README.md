@@ -29,7 +29,8 @@ Server y Entity Framework Core.
 
 3. El script comprueba SQL Server, crea `InventarioFerreteriaDB` desde
    `BaseDatos.txt` si aún no existe, restaura las dependencias, compila el
-   proyecto y abre `http://localhost:5118`.
+   proyecto y abre `http://localhost:5118`. La aplicación se ejecuta como DLL
+   mediante `dotnet.exe`, sin depender de un ejecutable local sin firmar.
 4. Para detener la aplicación, presiona `Ctrl+C` en la ventana de ejecución.
 
 El inicio es idempotente: si la base de datos ya existe, el script no vuelve a
@@ -48,7 +49,9 @@ sin modificar archivos del repositorio:
 
 ```powershell
 $env:ConnectionStrings__ConexionSQL = "Server=.\NOMBRE_INSTANCIA;Database=InventarioFerreteriaDB;Integrated Security=True;TrustServerCertificate=True;MultipleActiveResultSets=True;"
-dotnet run --project .\SistemaInventarioFerreteria.csproj --launch-profile http
+$env:ASPNETCORE_ENVIRONMENT = "Development"
+$env:ASPNETCORE_URLS = "http://localhost:5118"
+dotnet .\bin\Debug\net10.0\SistemaInventarioFerreteria.dll
 ```
 
 ## Visual Studio
@@ -64,6 +67,22 @@ Desde `SistemaInventarioFerreteria`:
 dotnet restore --configfile .\NuGet.Config
 dotnet build --no-restore
 ```
+
+El proyecto tiene `UseAppHost=false`: la compilación genera la DLL administrada
+y no necesita iniciar `SistemaInventarioFerreteria.exe`.
+
+## Compatibilidad con Windows Application Control
+
+Algunas computadoras bloquean los ejecutables locales sin firma generados por
+.NET. `INICIAR.cmd` evita ese problema ejecutando la aplicación de esta forma:
+
+```powershell
+dotnet exec .\bin\Debug\net10.0\SistemaInventarioFerreteria.dll
+```
+
+No es necesario desactivar Smart App Control, AppLocker, WDAC ni el antivirus.
+Si una política también bloquea `dotnet.exe`, un administrador deberá autorizar
+el SDK oficial de .NET; el proyecto no intenta eludir esa política.
 
 ## Seguridad
 

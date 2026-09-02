@@ -13,6 +13,7 @@ $projectDirectory = Split-Path -Parent $PSScriptRoot
 $projectFile = Join-Path $projectDirectory "SistemaInventarioFerreteria.csproj"
 $nugetConfig = Join-Path $projectDirectory "NuGet.Config"
 $databaseScript = Join-Path (Split-Path -Parent $projectDirectory) "BaseDatos.txt"
+$applicationDll = Join-Path $projectDirectory "bin\Debug\net10.0\SistemaInventarioFerreteria.dll"
 $applicationUrl = "http://localhost:5118"
 
 function Write-Step {
@@ -149,11 +150,21 @@ try {
     Invoke-CheckedCommand -Command $dotnetCommand.Source -Arguments @(
         "build", $projectFile,
         "--no-restore",
+        "--configuration", "Debug",
+        "-p:UseAppHost=false",
         "--nologo"
     )
 
+    if (-not (Test-Path -LiteralPath $applicationDll -PathType Leaf)) {
+        throw "La compilacion termino, pero no se encontro la aplicacion: $applicationDll"
+    }
+
     Write-Step "Iniciando el sistema en $applicationUrl"
+    Write-Host "Modo compatible con Application Control: dotnet.exe ejecutara la DLL; no se usara un archivo EXE local." -ForegroundColor DarkGray
     Write-Host "Para detenerlo, presiona Ctrl+C." -ForegroundColor DarkGray
+
+    $env:ASPNETCORE_ENVIRONMENT = "Development"
+    $env:ASPNETCORE_URLS = $applicationUrl
 
     if (-not $NoAbrirNavegador) {
         $browserCommand = "Start-Sleep -Seconds 3; Start-Process '$applicationUrl'"
@@ -165,10 +176,16 @@ try {
         ) | Out-Null
     }
 
-    & $dotnetCommand.Source run `
-        --project $projectFile `
-        --no-build `
-        --launch-profile http
+    Push-Location $projectDirectory
+    try {
+        & $dotnetCommand.Source exec $applicationDll
+        if ($LASTEXITCODE -ne 0) {
+            throw "La aplicacion termino con el codigo $LASTEXITCODE."
+        }
+    }
+    finally {
+        Pop-Location
+    }
 }
 catch {
     Write-Host ""

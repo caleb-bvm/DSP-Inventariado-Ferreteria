@@ -11,6 +11,8 @@ Aplicacion web ASP.NET Core MVC conectada a **Microsoft SQL Server**. La configu
 
 El proceso es seguro para ejecuciones posteriores: si la base ya existe, no vuelve a importar el archivo ni sobrescribe los datos.
 
+La aplicacion se compila sin AppHost y se ejecuta como DLL mediante el `dotnet.exe` oficial. Esto evita el error `An Application Control policy has blocked this file` que algunas politicas de Windows producen al intentar abrir un ejecutable local sin firmar.
+
 ## Otra instancia de SQL Server
 
 Si la instancia no se llama `SQLEXPRESS`, abre PowerShell en esta carpeta y ejecuta:
@@ -31,6 +33,18 @@ $env:ConnectionStrings__ConexionSQL = "Server=.\NOMBRE_INSTANCIA;Database=Invent
 ## Ejecucion desde Visual Studio
 
 Ejecuta `INICIAR.cmd` al menos una vez para preparar la base y las dependencias. Luego abre `SistemaInventarioFerreteria.slnx` y usa el perfil `http`.
+
+## Ejecucion manual compatible con Application Control
+
+```powershell
+dotnet restore --configfile .\NuGet.Config
+dotnet build --no-restore
+$env:ASPNETCORE_ENVIRONMENT = "Development"
+$env:ASPNETCORE_URLS = "http://localhost:5118"
+dotnet exec .\bin\Debug\net10.0\SistemaInventarioFerreteria.dll
+```
+
+No desactives Smart App Control, AppLocker, WDAC ni el antivirus. Si Windows tambien bloquea el `dotnet.exe` oficial, solicita al administrador que autorice el SDK de .NET.
 
 ## Seguridad
 
