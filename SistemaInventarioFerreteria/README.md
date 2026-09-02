@@ -4,7 +4,7 @@ Aplicacion web ASP.NET Core MVC conectada a **Microsoft SQL Server**. La configu
 
 ## Inicio rapido
 
-1. Verifica que esten instalados **SQL Server Express** (instancia `SQLEXPRESS`), **sqlcmd** y **.NET 10 SDK**.
+1. Verifica que esten instalados **SQL Server Express** (instancia `SQLEXPRESS`) y **sqlcmd**. Si falta el SDK de .NET 10, `INICIAR.cmd` lo instalara automaticamente mediante `winget` y Windows puede solicitar permiso de administrador.
 2. Haz doble clic en `INICIAR.cmd`.
 3. El sistema comprobara SQL Server, creara `InventarioFerreteriaDB` desde `..\BaseDatos.txt` cuando sea necesario, restaurara las dependencias y abrira `http://localhost:5118`.
 4. Para detener la aplicacion, presiona `Ctrl+C` en la ventana que queda abierta.
@@ -58,4 +58,5 @@ No desactives Smart App Control, AppLocker, WDAC ni el antivirus. Si Windows tam
 
 - **SQL Server esta detenido:** ejecuta `INICIAR.cmd` como administrador una vez.
 - **No se encontro sqlcmd:** agrega las herramientas de linea de comandos al instalar SQL Server Express.
+- **No se pudo instalar el SDK:** comprueba la conexion a Internet, que `winget` este disponible y acepta la solicitud de administrador de Windows.
 - **La estructura esta incompleta:** respalda o renombra la base existente antes de volver a ejecutar el inicio. El script nunca la elimina automaticamente.

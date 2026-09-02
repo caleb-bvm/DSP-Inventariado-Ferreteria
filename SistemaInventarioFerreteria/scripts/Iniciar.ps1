@@ -38,6 +38,61 @@ function Invoke-CheckedCommand {
     }
 }
 
+function Find-DotNet10Sdk {
+    $candidatePaths = @()
+    $pathCommand = Get-Command "dotnet.exe" -ErrorAction SilentlyContinue
+
+    if ($null -ne $pathCommand) {
+        $candidatePaths += $pathCommand.Source
+    }
+
+    $programFiles = [Environment]::GetFolderPath([Environment+SpecialFolder]::ProgramFiles)
+    if (-not [string]::IsNullOrWhiteSpace($programFiles)) {
+        $candidatePaths += (Join-Path $programFiles "dotnet\dotnet.exe")
+    }
+
+    if (-not [string]::IsNullOrWhiteSpace($env:LOCALAPPDATA)) {
+        $candidatePaths += (Join-Path $env:LOCALAPPDATA "Microsoft\dotnet\dotnet.exe")
+    }
+
+    foreach ($candidatePath in ($candidatePaths | Select-Object -Unique)) {
+        if (-not (Test-Path -LiteralPath $candidatePath -PathType Leaf)) {
+            continue
+        }
+
+        $installedSdks = & $candidatePath --list-sdks 2>$null
+        $sdkCommandExitCode = $LASTEXITCODE
+        $hasDotNet10Sdk = $installedSdks | Where-Object { $_ -match '^\s*10\.0\.\d+' } | Select-Object -First 1
+
+        if ($sdkCommandExitCode -eq 0 -and $null -ne $hasDotNet10Sdk) {
+            return $candidatePath
+        }
+    }
+
+    return $null
+}
+
+function Install-DotNet10Sdk {
+    $wingetCommand = Get-Command "winget.exe" -ErrorAction SilentlyContinue
+    if ($null -eq $wingetCommand) {
+        throw "No se encontro el SDK de .NET 10 ni el instalador winget. Instalalo desde https://dotnet.microsoft.com/download/dotnet/10.0"
+    }
+
+    Write-Step "Instalando el SDK oficial de .NET 10"
+    Write-Host "Windows puede solicitar permiso de administrador para completar la instalacion." -ForegroundColor Yellow
+
+    & $wingetCommand.Source install `
+        --id "Microsoft.DotNet.SDK.10" `
+        --exact `
+        --source "winget" `
+        --accept-source-agreements `
+        --accept-package-agreements
+
+    if ($LASTEXITCODE -ne 0) {
+        throw "No fue posible instalar el SDK de .NET 10 mediante winget (codigo $LASTEXITCODE)."
+    }
+}
+
 function Invoke-SqlCommand {
     param(
         [Parameter(Mandatory)]
@@ -65,9 +120,14 @@ try {
     Write-Host "Sistema de Inventario de Ferreteria" -ForegroundColor Green
     Write-Host "Servidor SQL: $SqlServer"
 
-    $dotnetCommand = Get-Command "dotnet.exe" -ErrorAction SilentlyContinue
-    if ($null -eq $dotnetCommand) {
-        throw "No se encontro .NET 10 SDK. Instalalo desde https://dotnet.microsoft.com/download/dotnet/10.0"
+    $dotnetPath = Find-DotNet10Sdk
+    if ($null -eq $dotnetPath) {
+        Install-DotNet10Sdk
+        $dotnetPath = Find-DotNet10Sdk
+
+        if ($null -eq $dotnetPath) {
+            throw "La instalacion termino, pero el SDK de .NET 10 aun no esta disponible. Cierra esta ventana, vuelve a abrir INICIAR.cmd y, si el problema continua, repara la instalacion de .NET 10."
+        }
     }
 
     $sqlcmdCommand = Get-Command "sqlcmd.exe" -ErrorAction SilentlyContinue
@@ -140,14 +200,14 @@ try {
     $env:ConnectionStrings__ConexionSQL = $connectionString
 
     Write-Step "Restaurando las dependencias del proyecto"
-    Invoke-CheckedCommand -Command $dotnetCommand.Source -Arguments @(
+    Invoke-CheckedCommand -Command $dotnetPath -Arguments @(
         "restore", $projectFile,
         "--configfile", $nugetConfig,
         "--nologo"
     )
 
     Write-Step "Compilando el sistema"
-    Invoke-CheckedCommand -Command $dotnetCommand.Source -Arguments @(
+    Invoke-CheckedCommand -Command $dotnetPath -Arguments @(
         "build", $projectFile,
         "--no-restore",
         "--configuration", "Debug",
@@ -178,7 +238,7 @@ try {
 
     Push-Location $projectDirectory
     try {
-        & $dotnetCommand.Source exec $applicationDll
+        & $dotnetPath exec $applicationDll
         if ($LASTEXITCODE -ne 0) {
             throw "La aplicacion termino con el codigo $LASTEXITCODE."
         }

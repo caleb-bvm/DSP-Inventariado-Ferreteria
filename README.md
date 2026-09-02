@@ -7,7 +7,8 @@ Server y Entity Framework Core.
 ## Requisitos
 
 - Windows 10 u 11.
-- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0).
+- Acceso a Internet y `winget` para instalar automáticamente el SDK de .NET 10
+  si todavía no está disponible.
 - SQL Server Express con una instancia llamada `SQLEXPRESS`.
 - La herramienta `sqlcmd`, incluida con las herramientas de línea de comandos
   de SQL Server.
@@ -27,11 +28,14 @@ Server y Entity Framework Core.
    .\INICIAR.cmd
    ```
 
-3. El script comprueba SQL Server, crea `InventarioFerreteriaDB` desde
+3. Si falta el SDK de .NET 10, el script instala automáticamente el paquete
+   oficial `Microsoft.DotNet.SDK.10` mediante `winget`; Windows puede solicitar
+   permiso de administrador.
+4. El script comprueba SQL Server, crea `InventarioFerreteriaDB` desde
    `BaseDatos.txt` si aún no existe, restaura las dependencias, compila el
    proyecto y abre `http://localhost:5118`. La aplicación se ejecuta como DLL
    mediante `dotnet.exe`, sin depender de un ejecutable local sin firmar.
-4. Para detener la aplicación, presiona `Ctrl+C` en la ventana de ejecución.
+5. Para detener la aplicación, presiona `Ctrl+C` en la ventana de ejecución.
 
 El inicio es idempotente: si la base de datos ya existe, el script no vuelve a
 importarla ni sobrescribe sus datos.
@@ -103,6 +107,8 @@ el SDK oficial de .NET; el proyecto no intenta eludir esa política.
 - **SQL Server está detenido:** ejecuta `INICIAR.cmd` como administrador una vez.
 - **No se encontró `sqlcmd`:** instala las herramientas de línea de comandos de
   SQL Server y vuelve a abrir la terminal.
+- **No se pudo instalar el SDK:** comprueba la conexión a Internet, que `winget`
+  esté disponible y acepta la solicitud de administrador de Windows.
 - **La instancia tiene otro nombre:** pásala como argumento a `INICIAR.cmd`.
 - **La estructura está incompleta:** respalda o renombra la base existente antes
   de volver a ejecutar el inicio.
