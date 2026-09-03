@@ -1,0 +1,84 @@
+﻿@model SistemaInventarioFerreteria.Models.Inventario
+
+@{
+    ViewData["Title"] = "Detalles del inventario";
+
+    var minimo = Model.VarianteProducto?.StockMinimo ?? 0;
+
+    var estado = Model.Cantidad == 0
+        ? "Sin existencias"
+        : Model.Cantidad <= minimo
+            ? "Stock bajo"
+            : "Disponible";
+
+    var claseEstado = estado == "Disponible"
+        ? "status-active"
+        : estado == "Stock bajo"
+            ? "status-warning"
+            : "status-inactive";
+}
+
+<div class="formulario-contenedor">
+    <div class="formulario-encabezado">
+        <h1>Detalles del inventario</h1>
+        <p>Consulta la variante, la sucursal y el nivel actual de existencias.</p>
+    </div>
+
+    <div class="formulario-tarjeta">
+        <div class="detalle-fila">
+            <span class="detalle-etiqueta">ID</span>
+            <span class="detalle-valor">@Model.IdInventario</span>
+        </div>
+
+        <div class="detalle-fila">
+            <span class="detalle-etiqueta">SKU</span>
+            <span class="detalle-valor">
+                @(Model.VarianteProducto?.SKU ?? "Sin SKU")
+            </span>
+        </div>
+
+        <div class="detalle-fila">
+            <span class="detalle-etiqueta">Producto</span>
+            <span class="detalle-valor">
+                @(Model.VarianteProducto?.Producto?.Nombre ?? "Sin producto")
+            </span>
+        </div>
+
+        <div class="detalle-fila">
+            <span class="detalle-etiqueta">Sucursal</span>
+            <span class="detalle-valor">
+                @(Model.Sucursal?.Nombre ?? "Sin sucursal")
+            </span>
+        </div>
+
+        <div class="detalle-fila">
+            <span class="detalle-etiqueta">Cantidad</span>
+            <span class="detalle-valor">@Model.Cantidad</span>
+        </div>
+
+        <div class="detalle-fila">
+            <span class="detalle-etiqueta">Stock mínimo</span>
+            <span class="detalle-valor">@minimo</span>
+        </div>
+
+        <div class="detalle-fila">
+            <span class="detalle-etiqueta">Estado</span>
+            <span class="detalle-valor">
+                <span class="status-badge @claseEstado">
+                    @estado
+                </span>
+            </span>
+        </div>
+
+        <div class="botones-formulario">
+            <a asp-action="editar"
+               asp-route-id="@Model.IdInventario"
+               class="boton-guardar">
+                Editar inventario
+            </a>
+            <a asp-action="inicio" class="boton-regresar">
+                Regresar
+            </a>
+        </div>
+    </div>
+</div>

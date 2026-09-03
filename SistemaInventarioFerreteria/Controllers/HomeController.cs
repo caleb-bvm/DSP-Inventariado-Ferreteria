@@ -33,7 +33,9 @@ namespace SistemaInventarioFerreteria.Controllers
 
             dashboard.TotalExistencias = await _context.Inventarios.SumAsync(i => i.Cantidad);
 
-            return View(dashboard);
+            dashboard.StockBajo = await _context.Inventarios.CountAsync(i => i.Cantidad > 0 && i.Cantidad <= i.VarianteProducto!.StockMinimo);
+
+			return View(dashboard);
         }
     }
 }

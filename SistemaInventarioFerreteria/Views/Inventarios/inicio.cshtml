@@ -1,0 +1,174 @@
+﻿@model IEnumerable<SistemaInventarioFerreteria.Models.Inventario>
+
+@{
+    ViewData["Title"] = "Inventario";
+    var totalUnidades = Model.Sum(i => i.Cantidad);
+    var sinExistencias = Model.Count(i => i.Cantidad == 0);
+    var stockBajo = Model.Count(i =>
+        i.Cantidad > 0 &&
+        i.Cantidad <= (i.VarianteProducto?.StockMinimo ?? 0));
+}
+
+<header class="page-header">
+    <div class="page-heading">
+        <span class="eyebrow">Existencias</span>
+        <h1>Inventario</h1>
+        <p>Consulta y administra las existencias de cada variante por sucursal.</p>
+    </div>
+    <div class="page-actions">
+        <a asp-action="crear" class="btn btn-primary">
+            <svg class="md-icon"><use href="#icon-plus"></use></svg>
+            Agregar inventario
+        </a>
+    </div>
+</header>
+
+<section class="metric-grid" aria-label="Resumen del inventario">
+    <article class="metric-card">
+        <div class="metric-copy">
+            <span class="metric-label">Existencias</span>
+            <strong class="metric-value">@totalUnidades</strong>
+            <span class="metric-note">Unidades registradas</span>
+        </div>
+        <span class="metric-icon">
+            <svg class="md-icon"><use href="#icon-package"></use></svg>
+        </span>
+    </article>
+
+    <article class="metric-card">
+        <div class="metric-copy">
+            <span class="metric-label">Stock bajo</span>
+            <strong class="metric-value">@stockBajo</strong>
+            <span class="metric-note">Registros por revisar</span>
+        </div>
+        <span class="metric-icon">
+            <svg class="md-icon"><use href="#icon-warning"></use></svg>
+        </span>
+    </article>
+
+    <article class="metric-card">
+        <div class="metric-copy">
+            <span class="metric-label">Sin existencias</span>
+            <strong class="metric-value">@sinExistencias</strong>
+            <span class="metric-note">Registros agotados</span>
+        </div>
+        <span class="metric-icon">
+            <svg class="md-icon"><use href="#icon-out"></use></svg>
+        </span>
+    </article>
+</section>
+
+<section class="contenedor-tabla">
+    <div class="titulo-tabla">
+        <div>
+            <h2>Listado de existencias</h2>
+            <p>Variante, producto, sucursal y nivel actual de stock.</p>
+        </div>
+        <span class="status-badge status-active">
+            @Model.Count() registros
+        </span>
+    </div>
+
+    <div class="table-scroll">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>SKU</th>
+                    <th>Producto</th>
+                    <th>Sucursal</th>
+                    <th>Cantidad</th>
+                    <th>Stock mínimo</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="8" class="empty-state">
+                            <strong>Aún no hay inventarios</strong>
+                            Agrega la primera combinación de variante y sucursal.
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var item in Model)
+                    {
+                        var minimo =
+                            item.VarianteProducto?.StockMinimo ?? 0;
+
+                        var estado = item.Cantidad == 0
+                            ? "Sin existencias"
+                            : item.Cantidad <= minimo
+                                ? "Stock bajo"
+                                : "Disponible";
+
+                        var claseEstado = estado == "Disponible"
+                            ? "status-active"
+                            : estado == "Stock bajo"
+                                ? "status-warning"
+                                : "status-inactive";
+
+                        <tr>
+                            <td class="entity-id">
+                                #@item.IdInventario
+                            </td>
+                            <td>
+                                <strong>
+                                    @(item.VarianteProducto?.SKU ?? "Sin SKU")
+                                </strong>
+                            </td>
+                            <td>
+                                @(item.VarianteProducto?.Producto?.Nombre
+                                    ?? "Sin producto")
+                            </td>
+                            <td>
+                                @(item.Sucursal?.Nombre ?? "Sin sucursal")
+                            </td>
+                            <td>@item.Cantidad</td>
+                            <td>@minimo</td>
+                            <td>
+                                <span class="status-badge @claseEstado">
+                                    @estado
+                                </span>
+                            </td>
+                            <td>
+                                <div class="table-actions">
+                                    <a asp-action="detalles"
+                                       asp-route-id="@item.IdInventario"
+                                       class="action-button action-view">
+                                        <svg class="md-icon">
+                                            <use href="#icon-view"></use>
+                                        </svg>
+                                        <span>Ver</span>
+                                    </a>
+
+                                    <a asp-action="editar"
+                                       asp-route-id="@item.IdInventario"
+                                       class="action-button action-edit">
+                                        <svg class="md-icon">
+                                            <use href="#icon-edit"></use>
+                                        </svg>
+                                        <span>Editar</span>
+                                    </a>
+
+                                    <a asp-action="eliminar"
+                                       asp-route-id="@item.IdInventario"
+                                       class="action-button action-delete">
+                                        <svg class="md-icon">
+                                            <use href="#icon-delete"></use>
+                                        </svg>
+                                        <span>Eliminar</span>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</section>

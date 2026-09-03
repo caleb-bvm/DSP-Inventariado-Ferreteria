@@ -76,12 +76,15 @@
                 <a asp-controller="Sucursales" asp-action="inicio" class="@NavClass("Sucursales")">
                     <svg class="md-icon"><use href="#icon-branch"></use></svg><span>Sucursales</span>
                 </a>
+                <a asp-controller="Inventarios" asp-action="inicio" class="@NavClass("Inventarios")">
+                    <svg class="md-icon"><use href="#icon-package"></use></svg><span>Inventario</span>
+                </a>
             </nav>
 
             <div class="nav-label nav-label-spaced">Operaciones</div>
-            <nav class="nav-list" aria-label="Próximas funciones">
-                <a href="#" class="nav-item is-disabled" aria-disabled="true" title="Próximamente">
-                    <svg class="md-icon"><use href="#icon-in"></use></svg><span>Entradas</span><small>Pronto</small>
+            <nav class="nav-list" aria-label="Operaciones de inventario">
+                <a asp-controller="EntradasInventario" asp-action="inicio" class="@NavClass("EntradasInventario")">
+                    <svg class="md-icon"><use href="#icon-in"></use></svg><span>Entradas</span>
                 </a>
                 <a href="#" class="nav-item is-disabled" aria-disabled="true" title="Próximamente">
                     <svg class="md-icon"><use href="#icon-out"></use></svg><span>Salidas</span><small>Pronto</small>
