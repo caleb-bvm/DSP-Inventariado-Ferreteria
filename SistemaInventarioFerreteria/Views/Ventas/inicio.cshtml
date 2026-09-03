@@ -1,0 +1,45 @@
+@model IEnumerable<SistemaInventarioFerreteria.Models.Venta>
+@{ ViewData["Title"] = "Ventas"; }
+
+<header class="page-header">
+    <div class="page-heading"><span class="eyebrow">Operaciones</span><h1>Ventas</h1><p>Registra salidas y descuenta automáticamente las existencias.</p></div>
+    <div class="page-actions"><a asp-action="crear" class="btn btn-primary"><svg class="md-icon"><use href="#icon-plus"></use></svg>Nueva venta</a></div>
+</header>
+
+<section class="metric-grid" aria-label="Resumen de ventas">
+    <article class="metric-card"><div class="metric-copy"><span class="metric-label">Ventas</span><strong class="metric-value">@Model.Count()</strong><span class="metric-note">Registros guardados</span></div><span class="metric-icon"><svg class="md-icon"><use href="#icon-out"></use></svg></span></article>
+    <article class="metric-card"><div class="metric-copy"><span class="metric-label">Total vendido</span><strong class="metric-value">$@Model.Sum(v => v.Total).ToString("0.00")</strong><span class="metric-note">Suma histórica</span></div><span class="metric-icon"><svg class="md-icon"><use href="#icon-report"></use></svg></span></article>
+</section>
+
+<section class="contenedor-tabla">
+    <div class="titulo-tabla"><div><h2>Historial de ventas</h2><p>Producto, sucursal, cantidad, fecha y total.</p></div></div>
+    <div class="table-scroll"><table class="data-table">
+        <thead><tr><th>ID</th><th>Producto</th><th>Sucursal</th><th>Cantidad</th><th>Fecha</th><th>Total</th><th>Acciones</th></tr></thead>
+        <tbody>
+        @if (!Model.Any())
+        {
+            <tr><td colspan="7" class="empty-state"><strong>Aún no hay ventas</strong>Registra la primera venta.</td></tr>
+        }
+        else
+        {
+            @foreach (var venta in Model)
+            {
+                var detalle = venta.Detalles.FirstOrDefault();
+                <tr>
+                    <td class="entity-id">#@venta.IdVenta</td>
+                    <td><strong>@(detalle?.VarianteProducto?.Producto?.Nombre ?? "Sin detalle")</strong><br /><span class="muted-text">@detalle?.VarianteProducto?.SKU</span></td>
+                    <td>@venta.Sucursal?.Nombre</td>
+                    <td>@(detalle?.Cantidad ?? 0)</td>
+                    <td>@venta.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td><strong>$@venta.Total.ToString("0.00")</strong></td>
+                    <td><div class="table-actions">
+                        <a asp-action="detalles" asp-route-id="@venta.IdVenta" class="action-button action-view"><svg class="md-icon"><use href="#icon-view"></use></svg><span>Ver</span></a>
+                        <a asp-action="editar" asp-route-id="@venta.IdVenta" class="action-button action-edit"><svg class="md-icon"><use href="#icon-edit"></use></svg><span>Editar</span></a>
+                        <a asp-action="eliminar" asp-route-id="@venta.IdVenta" class="action-button action-delete"><svg class="md-icon"><use href="#icon-delete"></use></svg><span>Eliminar</span></a>
+                    </div></td>
+                </tr>
+            }
+        }
+        </tbody>
+    </table></div>
+</section>

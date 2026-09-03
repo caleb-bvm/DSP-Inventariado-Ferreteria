@@ -61,21 +61,27 @@
                 <a asp-controller="Home" asp-action="Index" class="@NavClass("Home")">
                     <svg class="md-icon"><use href="#icon-home"></use></svg><span>Inicio</span>
                 </a>
-                <a asp-controller="Productos" asp-action="inicio" class="@NavClass("Productos")">
-                    <svg class="md-icon"><use href="#icon-package"></use></svg><span>Productos</span>
-                </a>
-                <a asp-controller="Categorias" asp-action="inicio" class="@NavClass("Categorias")">
-                    <svg class="md-icon"><use href="#icon-category"></use></svg><span>Categorías</span>
-                </a>
-                <a asp-controller="Marcas" asp-action="inicio" class="@NavClass("Marcas")">
-                    <svg class="md-icon"><use href="#icon-brand"></use></svg><span>Marcas</span>
-                </a>
-                <a asp-controller="Proveedores" asp-action="inicio" class="@NavClass("Proveedores")">
-                    <svg class="md-icon"><use href="#icon-suppliers"></use></svg><span>Proveedores</span>
-                </a>
-                <a asp-controller="Sucursales" asp-action="inicio" class="@NavClass("Sucursales")">
-                    <svg class="md-icon"><use href="#icon-branch"></use></svg><span>Sucursales</span>
-                </a>
+                @if (User.IsInRole("Administrador"))
+                {
+                    <a asp-controller="Productos" asp-action="inicio" class="@NavClass("Productos")">
+                        <svg class="md-icon"><use href="#icon-package"></use></svg><span>Productos</span>
+                    </a>
+                    <a asp-controller="VariantesProductos" asp-action="inicio" class="@NavClass("VariantesProductos")">
+                        <svg class="md-icon"><use href="#icon-category"></use></svg><span>Variantes</span>
+                    </a>
+                    <a asp-controller="Categorias" asp-action="inicio" class="@NavClass("Categorias")">
+                        <svg class="md-icon"><use href="#icon-category"></use></svg><span>Categorías</span>
+                    </a>
+                    <a asp-controller="Marcas" asp-action="inicio" class="@NavClass("Marcas")">
+                        <svg class="md-icon"><use href="#icon-brand"></use></svg><span>Marcas</span>
+                    </a>
+                    <a asp-controller="Proveedores" asp-action="inicio" class="@NavClass("Proveedores")">
+                        <svg class="md-icon"><use href="#icon-suppliers"></use></svg><span>Proveedores</span>
+                    </a>
+                    <a asp-controller="Sucursales" asp-action="inicio" class="@NavClass("Sucursales")">
+                        <svg class="md-icon"><use href="#icon-branch"></use></svg><span>Sucursales</span>
+                    </a>
+                }
                 <a asp-controller="Inventarios" asp-action="inicio" class="@NavClass("Inventarios")">
                     <svg class="md-icon"><use href="#icon-package"></use></svg><span>Inventario</span>
                 </a>
@@ -86,25 +92,27 @@
                 <a asp-controller="EntradasInventario" asp-action="inicio" class="@NavClass("EntradasInventario")">
                     <svg class="md-icon"><use href="#icon-in"></use></svg><span>Entradas</span>
                 </a>
-                <a href="#" class="nav-item is-disabled" aria-disabled="true" title="Próximamente">
-                    <svg class="md-icon"><use href="#icon-out"></use></svg><span>Salidas</span><small>Pronto</small>
+                <a asp-controller="Ventas" asp-action="inicio" class="@NavClass("Ventas")">
+                    <svg class="md-icon"><use href="#icon-out"></use></svg><span>Ventas</span>
                 </a>
-                <a href="#" class="nav-item is-disabled" aria-disabled="true" title="Próximamente">
-                    <svg class="md-icon"><use href="#icon-movement"></use></svg><span>Movimientos</span><small>Pronto</small>
-                </a>
-                <a href="#" class="nav-item is-disabled" aria-disabled="true" title="Próximamente">
-                    <svg class="md-icon"><use href="#icon-report"></use></svg><span>Reportes</span><small>Pronto</small>
+                <a asp-controller="Asistente" asp-action="Index" class="@NavClass("Asistente")">
+                    <svg class="md-icon"><use href="#icon-report"></use></svg><span>Asistente IA</span>
                 </a>
             </nav>
 
             <div class="account-card">
-                <div class="account-avatar" aria-hidden="true">AD</div>
-                <div><strong>Administrador</strong><span>Gestión general</span></div>
-                <span class="online-dot" title="Sesión activa"></span>
+                <div class="account-avatar" aria-hidden="true">@(User.IsInRole("Administrador") ? "AD" : "OP")</div>
+                <div class="account-copy">
+                    <strong>@User.Identity?.Name</strong>
+                    <span>@(User.IsInRole("Administrador") ? "Administrador" : "Operador")</span>
+                </div>
+                <form asp-controller="Cuenta" asp-action="CerrarSesion" method="post">
+                    <button type="submit" class="logout-button" title="Cerrar sesión" aria-label="Cerrar sesión">×</button>
+                </form>
             </div>
         </aside>
 
-        <button class="nav-scrim" type="button" data-nav-close aria-label="Cerrar menú"></button>
+        <button class="nav-scrim" type="button" data-nav-close aria-label="Cerrar menú" hidden></button>
 
         <div class="app-stage">
             <header class="top-app-bar">
@@ -121,7 +129,7 @@
                 </div>
                 <div class="topbar-actions">
                     <span class="topbar-chip"><span class="online-dot"></span> Operando</span>
-                    <div class="topbar-avatar" aria-label="Perfil de Administrador">AD</div>
+                    <div class="topbar-avatar" aria-label="Perfil de usuario">@(User.IsInRole("Administrador") ? "AD" : "OP")</div>
                 </div>
             </header>
 

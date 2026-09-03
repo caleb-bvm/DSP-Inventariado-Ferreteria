@@ -2,6 +2,25 @@
 
 Aplicacion web ASP.NET Core MVC conectada a **Microsoft SQL Server**. La configuracion local usa autenticacion de Windows, por lo que no guarda usuarios ni contrasenas de SQL Server en el proyecto.
 
+## Modulos disponibles
+
+- Inventario y entradas de inventario.
+- Ventas: cada registro descuenta existencias y al editar o eliminar las repone.
+- Variantes de producto con SKU unico, precios y stock minimo.
+- Inicio de sesion con perfiles Administrador y Operador.
+- Asistente de inventario de solo lectura, con respuesta local verificable y conexion opcional a OpenAI.
+
+Para mantener el proyecto sencillo, cada venta registra un producto por formulario. El Administrador puede mantener catalogos e inventario; el Operador puede consultar inventario y registrar entradas o ventas.
+
+## Usuarios de demostracion
+
+| Perfil | Usuario | Contrasena |
+| --- | --- | --- |
+| Administrador | `admin` | `Admin123*` |
+| Operador | `operador` | `Operador123*` |
+
+Estas cuentas son solo para el proyecto academico. Cambia sus valores en `appsettings.json` o mediante variables de entorno antes de publicar el sistema.
+
 ## Inicio rapido
 
 1. Verifica que esten instalados **SQL Server Express** (instancia `SQLEXPRESS`) y **sqlcmd**. Si falta el SDK de .NET 10, `INICIAR.cmd` lo instalara automaticamente mediante `winget` y Windows puede solicitar permiso de administrador.
@@ -26,9 +45,21 @@ Tambien puedes reemplazar la cadena `ConexionSQL` en `appsettings.json` o defini
 Se recomienda usar la variable de entorno para no guardar credenciales ni datos privados en el repositorio:
 
 ```powershell
-$env:ConnectionStrings__ConexionSQL = "Server=.\NOMBRE_INSTANCIA;Database=InventarioFerreteriaDB;Integrated Security=True;TrustServerCertificate=True;MultipleActiveResultSets=True;"
+$env:ConnectionStrings__ConexionSQL = "Server=.\NOMBRE_INSTANCIA;Database=InventarioFerreteriaDB;Integrated Security=True;Encrypt=False;MultipleActiveResultSets=True;"
 .\INICIAR.cmd ".\NOMBRE_INSTANCIA"
 ```
+
+## Asistente IA
+
+Sin configuracion externa, el asistente ya puede consultar disponibilidad, explicar reposiciones y resumir alertas mediante calculos locales. Para agregar una explicacion generativa con OpenAI, define tu API key antes de iniciar:
+
+```powershell
+$env:OpenAI__ApiKey = "TU-CLAVE"
+$env:OpenAI__Modelo = "gpt-5-nano"
+.\INICIAR.cmd
+```
+
+La clave no debe guardarse en el repositorio. OpenAI solo redacta la explicacion; las cantidades y calculos siempre salen de SQL Server. `gpt-5-nano` es el modelo predeterminado para mantener bajo el costo.
 
 ## Ejecucion desde Visual Studio
 
@@ -48,7 +79,8 @@ No desactives Smart App Control, AppLocker, WDAC ni el antivirus. Si Windows tam
 
 ## Seguridad
 
-- La configuracion incluida usa autenticacion integrada de Windows y no contiene contrasenas.
+- La conexion a SQL Server usa autenticacion integrada de Windows y no contiene contrasenas de base de datos.
+- Las contrasenas incluidas para iniciar sesion son unicamente cuentas de demostracion.
 - Usa variables de entorno o Secret Manager de .NET para cualquier credencial privada.
 - No agregues a Git archivos `.env`, certificados, claves, configuraciones locales ni carpetas generadas.
 - La aplicacion local solo acepta `localhost` y `127.0.0.1`; configura hosts autorizados y HTTPS antes de desplegarla.

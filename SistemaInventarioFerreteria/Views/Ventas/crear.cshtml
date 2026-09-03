@@ -1,0 +1,17 @@
+@model SistemaInventarioFerreteria.Models.VentaFormulario
+@{ ViewData["Title"] = "Nueva venta"; }
+
+<div class="formulario-contenedor">
+    <div class="formulario-encabezado"><h1>Nueva venta</h1><p>La cantidad vendida se descontará del inventario.</p></div>
+    <div class="formulario-tarjeta">
+        <form asp-action="crear" method="post">
+            <div asp-validation-summary="ModelOnly" class="texto-error"></div>
+            <div class="campo"><label asp-for="IdSucursal">Sucursal</label><select asp-for="IdSucursal" asp-items="ViewBag.Sucursales"><option value="">Seleccione una sucursal</option></select><span asp-validation-for="IdSucursal" class="texto-error"></span></div>
+            <div class="campo"><label asp-for="IdVariante">Producto y variante</label><select asp-for="IdVariante" asp-items="ViewBag.Variantes"><option value="">Seleccione una variante</option></select><span asp-validation-for="IdVariante" class="texto-error"></span></div>
+            <div class="campo"><label asp-for="Cantidad">Cantidad</label><input asp-for="Cantidad" type="number" min="1" /><span asp-validation-for="Cantidad" class="texto-error"></span></div>
+            <div class="campo"><label asp-for="Fecha">Fecha</label><input asp-for="Fecha" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" /><span asp-validation-for="Fecha" class="texto-error"></span></div>
+            <div class="botones-formulario"><button type="submit" class="boton-guardar">Guardar venta</button><a asp-action="inicio" class="boton-regresar">Cancelar</a></div>
+        </form>
+    </div>
+</div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

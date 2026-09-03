@@ -196,7 +196,7 @@ try {
         throw "La base existe, pero su estructura esta incompleta ($schemaTableCount de 13 tablas esperadas). No se sobrescribio ningun dato."
     }
 
-    $connectionString = "Server=$SqlServer;Database=InventarioFerreteriaDB;Integrated Security=True;TrustServerCertificate=True;MultipleActiveResultSets=True;"
+    $connectionString = "Server=$SqlServer;Database=InventarioFerreteriaDB;Integrated Security=True;Encrypt=False;MultipleActiveResultSets=True;"
     $env:ConnectionStrings__ConexionSQL = $connectionString
 
     Write-Step "Restaurando las dependencias del proyecto"

@@ -8,12 +8,13 @@ namespace SistemaInventarioFerreteria.Models
         [Key]
         public int IdVariante { get; set; }
 
+        [Range(1, int.MaxValue, ErrorMessage = "Seleccione un producto.")]
         public int IdProducto { get; set; }
 
         public int? IdMarca { get; set; }
 
-        [Required]
-        [StringLength(50)]
+        [Required(ErrorMessage = "El SKU es obligatorio.")]
+        [StringLength(50, ErrorMessage = "El SKU no puede superar los 50 caracteres.")]
         public string SKU { get; set; } = string.Empty;
 
         [StringLength(50)]
@@ -32,14 +33,17 @@ namespace SistemaInventarioFerreteria.Models
         public string? Presentacion { get; set; }
 
         [Column(TypeName = "decimal(10,2)")]
+        [Range(typeof(decimal), "0.01", "99999999.99", ErrorMessage = "El precio de compra debe ser mayor que cero.")]
         public decimal PrecioCompra { get; set; }
 
         [Column(TypeName = "decimal(10,2)")]
+        [Range(typeof(decimal), "0.01", "99999999.99", ErrorMessage = "El precio de venta debe ser mayor que cero.")]
         public decimal PrecioVenta { get; set; }
 
+        [Range(0, int.MaxValue, ErrorMessage = "El stock mínimo no puede ser negativo.")]
         public int StockMinimo { get; set; }
 
-        public bool Activo { get; set; }
+        public bool Activo { get; set; } = true;
 
         [ForeignKey("IdProducto")]
         public Productos? Producto { get; set; }

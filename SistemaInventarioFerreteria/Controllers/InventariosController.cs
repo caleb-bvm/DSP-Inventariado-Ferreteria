@@ -40,6 +40,7 @@ namespace SistemaInventarioFerreteria.Controllers
 			return inventario == null ? NotFound() : View(inventario);
 		}
 
+		[Microsoft.AspNetCore.Authorization.Authorize(Roles = "Administrador")]
 		public async Task<IActionResult> crear()
 		{
 			await CargarListasAsync();
@@ -48,6 +49,7 @@ namespace SistemaInventarioFerreteria.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
+		[Microsoft.AspNetCore.Authorization.Authorize(Roles = "Administrador")]
 		public async Task<IActionResult> crear(
 			[Bind("IdVariante,IdSucursal,Cantidad")] Inventario inventario)
 		{
@@ -83,6 +85,7 @@ namespace SistemaInventarioFerreteria.Controllers
 			}
 		}
 
+		[Microsoft.AspNetCore.Authorization.Authorize(Roles = "Administrador")]
 		public async Task<IActionResult> editar(int? id)
 		{
 			if (id == null)
@@ -106,6 +109,7 @@ namespace SistemaInventarioFerreteria.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
+		[Microsoft.AspNetCore.Authorization.Authorize(Roles = "Administrador")]
 		public async Task<IActionResult> editar(
 			int id,
 			[Bind("IdInventario,IdVariante,IdSucursal,Cantidad")]
@@ -160,6 +164,7 @@ namespace SistemaInventarioFerreteria.Controllers
 			}
 		}
 
+		[Microsoft.AspNetCore.Authorization.Authorize(Roles = "Administrador")]
 		public async Task<IActionResult> eliminar(int? id)
 		{
 			if (id == null)
@@ -173,6 +178,7 @@ namespace SistemaInventarioFerreteria.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
+		[Microsoft.AspNetCore.Authorization.Authorize(Roles = "Administrador")]
 		public async Task<IActionResult> eliminar(int id)
 		{
 			var inventario = await ObtenerInventarioCompletoAsync(id);

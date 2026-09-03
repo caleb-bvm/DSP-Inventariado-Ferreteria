@@ -15,12 +15,15 @@
         <h1>Inventario</h1>
         <p>Consulta y administra las existencias de cada variante por sucursal.</p>
     </div>
-    <div class="page-actions">
-        <a asp-action="crear" class="btn btn-primary">
-            <svg class="md-icon"><use href="#icon-plus"></use></svg>
-            Agregar inventario
-        </a>
-    </div>
+    @if (User.IsInRole("Administrador"))
+    {
+        <div class="page-actions">
+            <a asp-action="crear" class="btn btn-primary">
+                <svg class="md-icon"><use href="#icon-plus"></use></svg>
+                Agregar inventario
+            </a>
+        </div>
+    }
 </header>
 
 <section class="metric-grid" aria-label="Resumen del inventario">
@@ -146,23 +149,26 @@
                                         <span>Ver</span>
                                     </a>
 
-                                    <a asp-action="editar"
-                                       asp-route-id="@item.IdInventario"
-                                       class="action-button action-edit">
-                                        <svg class="md-icon">
-                                            <use href="#icon-edit"></use>
-                                        </svg>
-                                        <span>Editar</span>
-                                    </a>
+                                    @if (User.IsInRole("Administrador"))
+                                    {
+                                        <a asp-action="editar"
+                                           asp-route-id="@item.IdInventario"
+                                           class="action-button action-edit">
+                                            <svg class="md-icon">
+                                                <use href="#icon-edit"></use>
+                                            </svg>
+                                            <span>Editar</span>
+                                        </a>
 
-                                    <a asp-action="eliminar"
-                                       asp-route-id="@item.IdInventario"
-                                       class="action-button action-delete">
-                                        <svg class="md-icon">
-                                            <use href="#icon-delete"></use>
-                                        </svg>
-                                        <span>Eliminar</span>
-                                    </a>
+                                        <a asp-action="eliminar"
+                                           asp-route-id="@item.IdInventario"
+                                           class="action-button action-delete">
+                                            <svg class="md-icon">
+                                                <use href="#icon-delete"></use>
+                                            </svg>
+                                            <span>Eliminar</span>
+                                        </a>
+                                    }
                                 </div>
                             </td>
                         </tr>

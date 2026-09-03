@@ -11,9 +11,10 @@
         <p>Una vista clara del catálogo, las existencias y los recursos principales de la ferretería.</p>
     </div>
     <div class="page-actions">
-        <a asp-controller="Productos" asp-action="crear" class="btn btn-primary">
+        <a asp-controller="@(User.IsInRole("Administrador") ? "Productos" : "Ventas")"
+           asp-action="crear" class="btn btn-primary">
             <svg class="md-icon"><use href="#icon-plus"></use></svg>
-            Nuevo producto
+            @(User.IsInRole("Administrador") ? "Nuevo producto" : "Nueva venta")
         </a>
     </div>
 </header>
@@ -120,21 +121,24 @@
         </div>
 
         <div class="acciones-rapidas">
-            <a asp-controller="Productos" asp-action="crear" class="accion">
-                <span class="accion-icono"><svg class="md-icon"><use href="#icon-plus"></use></svg></span>
-                <div><strong>Agregar producto</strong><span>Registrar en el catálogo</span></div>
-            </a>
-            <a asp-controller="Categorias" asp-action="crear" class="accion">
-                <span class="accion-icono"><svg class="md-icon"><use href="#icon-category"></use></svg></span>
-                <div><strong>Nueva categoría</strong><span>Crear una clasificación</span></div>
-            </a>
+            @if (User.IsInRole("Administrador"))
+            {
+                <a asp-controller="Productos" asp-action="crear" class="accion">
+                    <span class="accion-icono"><svg class="md-icon"><use href="#icon-plus"></use></svg></span>
+                    <div><strong>Agregar producto</strong><span>Registrar en el catálogo</span></div>
+                </a>
+                <a asp-controller="VariantesProductos" asp-action="crear" class="accion">
+                    <span class="accion-icono"><svg class="md-icon"><use href="#icon-category"></use></svg></span>
+                    <div><strong>Nueva variante</strong><span>Crear un SKU</span></div>
+                </a>
+            }
             <a asp-controller="EntradasInventario" asp-action="crear" class="accion">
                 <span class="accion-icono"><svg class="md-icon"><use href="#icon-in"></use></svg></span>
                 <div><strong>Registrar entrada</strong><span>Ingresar existencias</span></div>
             </a>
-            <a asp-controller="Proveedores" asp-action="crear" class="accion">
-                <span class="accion-icono"><svg class="md-icon"><use href="#icon-suppliers"></use></svg></span>
-                <div><strong>Nuevo proveedor</strong><span>Agregar un contacto</span></div>
+            <a asp-controller="Ventas" asp-action="crear" class="accion">
+                <span class="accion-icono"><svg class="md-icon"><use href="#icon-out"></use></svg></span>
+                <div><strong>Registrar venta</strong><span>Descontar existencias</span></div>
             </a>
         </div>
     </article>

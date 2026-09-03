@@ -17,6 +17,7 @@ tmp/
 .env.*
 !**/.env.example
 **/appsettings.Local.json
+**/appsettings.json
 **/appsettings.*.Local.json
 **/secrets.json
 *.pfx

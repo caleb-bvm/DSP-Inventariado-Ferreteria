@@ -71,11 +71,14 @@
         </div>
 
         <div class="botones-formulario">
-            <a asp-action="editar"
-               asp-route-id="@Model.IdInventario"
-               class="boton-guardar">
-                Editar inventario
-            </a>
+            @if (User.IsInRole("Administrador"))
+            {
+                <a asp-action="editar"
+                   asp-route-id="@Model.IdInventario"
+                   class="boton-guardar">
+                    Editar inventario
+                </a>
+            }
             <a asp-action="inicio" class="boton-regresar">
                 Regresar
             </a>

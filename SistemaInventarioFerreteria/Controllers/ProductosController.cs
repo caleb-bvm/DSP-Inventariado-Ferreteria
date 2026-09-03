@@ -6,6 +6,7 @@ using SistemaInventarioFerreteria.Models;
 
 namespace SistemaInventarioFerreteria.Controllers
 {
+    [Microsoft.AspNetCore.Authorization.Authorize(Roles = "Administrador")]
     public class ProductosController : Controller
     {
         private readonly ApplicationDbContext _context;

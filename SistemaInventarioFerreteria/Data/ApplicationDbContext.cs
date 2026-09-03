@@ -24,15 +24,19 @@ namespace SistemaInventarioFerreteria.Data
 
         public DbSet<Inventario> Inventarios { get; set; }
 
-		public DbSet<EntradaInventario> EntradasInventario { get; set; }
+        public DbSet<EntradaInventario> EntradasInventario { get; set; }
 
-		protected override void OnModelCreating(ModelBuilder modelBuilder)
-		{
-			base.OnModelCreating(modelBuilder);
+        public DbSet<Venta> Ventas { get; set; }
 
-			modelBuilder.Entity<Inventario>()
-				.HasIndex(i => new { i.IdVariante, i.IdSucursal })
-				.IsUnique();
-		}
-	}
+        public DbSet<DetalleVenta> DetalleVentas { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Inventario>()
+                .HasIndex(i => new { i.IdVariante, i.IdSucursal })
+                .IsUnique();
+        }
+    }
 }
