@@ -51,13 +51,23 @@ Estas cuentas son académicas. Deben cambiarse en `appsettings.json` o mediante 
    oficial `Microsoft.DotNet.SDK.10` mediante `winget`; Windows puede solicitar
    permiso de administrador.
 4. El script comprueba SQL Server, crea `InventarioFerreteriaDB` desde
-   `BaseDatos.txt` si aún no existe, restaura las dependencias, compila el
-   proyecto y abre `http://localhost:5118`. La aplicación se ejecuta como DLL
-   mediante `dotnet.exe`, sin depender de un ejecutable local sin firmar.
+   `BaseDatos.txt` si aún no existe y aplica `DatosDemostracion.sql`. Después
+   restaura las dependencias, compila el proyecto y abre
+   `http://localhost:5118`. La aplicación se ejecuta como DLL mediante
+   `dotnet.exe`, sin depender de un ejecutable local sin firmar.
 5. Para detener la aplicación, presiona `Ctrl+C` en la ventana de ejecución.
 
-El inicio es idempotente: si la base de datos ya existe, el script no vuelve a
-importarla ni sobrescribe sus datos.
+El inicio es idempotente: la estructura no se vuelve a crear y cada versión de
+los datos demostrativos se aplica una sola vez. No se elimina información
+existente y las ventas o entradas de ejemplo no se duplican.
+
+## Datos demostrativos
+
+`DatosDemostracion.sql` agrega un escenario ficticio inspirado en una ferretería
+salvadoreña: 5 sucursales, proveedores locales simulados, un catálogo amplio,
+existencias por sucursal y movimientos de los últimos 45 días. Los precios están
+expresados en dólares estadounidenses y son valores de demostración, no
+cotizaciones comerciales. Los teléfonos, correos y proveedores son ficticios.
 
 ## Usar otra instancia de SQL Server
 

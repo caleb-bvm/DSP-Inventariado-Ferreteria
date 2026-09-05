@@ -25,10 +25,10 @@ Estas cuentas son solo para el proyecto academico. Cambia sus valores en `appset
 
 1. Verifica que esten instalados **SQL Server Express** (instancia `SQLEXPRESS`) y **sqlcmd**. Si falta el SDK de .NET 10, `INICIAR.cmd` lo instalara automaticamente mediante `winget` y Windows puede solicitar permiso de administrador.
 2. Haz doble clic en `INICIAR.cmd`.
-3. El sistema comprobara SQL Server, creara `InventarioFerreteriaDB` desde `..\BaseDatos.txt` cuando sea necesario, restaurara las dependencias y abrira `http://localhost:5118`.
+3. El sistema comprobara SQL Server, creara `InventarioFerreteriaDB` desde `..\BaseDatos.txt` cuando sea necesario, aplicara una sola vez `..\DatosDemostracion.sql`, restaurara las dependencias y abrira `http://localhost:5118`.
 4. Para detener la aplicacion, presiona `Ctrl+C` en la ventana que queda abierta.
 
-El proceso es seguro para ejecuciones posteriores: si la base ya existe, no vuelve a importar el archivo ni sobrescribe los datos.
+El proceso es seguro para ejecuciones posteriores: no vuelve a crear la estructura y cada version de los datos demostrativos se aplica una sola vez, sin duplicar ventas ni entradas.
 
 La aplicacion se compila sin AppHost y se ejecuta como DLL mediante el `dotnet.exe` oficial. Esto evita el error `An Application Control policy has blocked this file` que algunas politicas de Windows producen al intentar abrir un ejecutable local sin firmar.
 

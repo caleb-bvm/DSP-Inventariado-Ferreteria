@@ -104,7 +104,7 @@
                 <div class="account-avatar" aria-hidden="true">@(User.IsInRole("Administrador") ? "AD" : "OP")</div>
                 <div class="account-copy">
                     <strong>@User.Identity?.Name</strong>
-                    <span>@(User.IsInRole("Administrador") ? "Administrador" : "Operador")</span>
+                    <span>@(User.IsInRole("Administrador") ? "Administrador" : User.FindFirst("SucursalNombre")?.Value ?? "Operador")</span>
                 </div>
                 <form asp-controller="Cuenta" asp-action="CerrarSesion" method="post">
                     <button type="submit" class="logout-button" title="Cerrar sesión" aria-label="Cerrar sesión">×</button>

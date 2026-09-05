@@ -2,16 +2,47 @@
 @{ ViewData["Title"] = "Nueva venta"; }
 
 <div class="formulario-contenedor">
-    <div class="formulario-encabezado"><h1>Nueva venta</h1><p>La cantidad vendida se descontará del inventario.</p></div>
+    <div class="formulario-encabezado"><span class="eyebrow">Punto de venta</span><h1>Nueva venta</h1><p>Busca el producto y registra la salida en pocos pasos.</p></div>
     <div class="formulario-tarjeta">
-        <form asp-action="crear" method="post">
+        <form asp-action="crear" method="post" class="venta-form" data-product-search-url="@Url.Action("buscarProductos", "Ventas")">
             <div asp-validation-summary="ModelOnly" class="texto-error"></div>
-            <div class="campo"><label asp-for="IdSucursal">Sucursal</label><select asp-for="IdSucursal" asp-items="ViewBag.Sucursales"><option value="">Seleccione una sucursal</option></select><span asp-validation-for="IdSucursal" class="texto-error"></span></div>
-            <div class="campo"><label asp-for="IdVariante">Producto y variante</label><select asp-for="IdVariante" asp-items="ViewBag.Variantes"><option value="">Seleccione una variante</option></select><span asp-validation-for="IdVariante" class="texto-error"></span></div>
+            @if (Model.SucursalFija)
+            {
+                <input type="hidden" asp-for="IdSucursal" />
+                <div class="sucursal-asignada" aria-label="Sucursal asignada">
+                    <span class="sucursal-asignada-icon"><svg class="md-icon"><use href="#icon-branch"></use></svg></span>
+                    <span><small>Sucursal asignada</small><strong>@Model.SucursalNombre</strong></span>
+                    <span class="status-badge status-active">Fija</span>
+                </div>
+            }
+            else
+            {
+                <div class="campo"><label asp-for="IdSucursal">Sucursal</label><select asp-for="IdSucursal" asp-items="ViewBag.Sucursales" data-branch-select><option value="">Seleccione una sucursal</option></select><span asp-validation-for="IdSucursal" class="texto-error"></span></div>
+            }
+            <div class="campo campo-producto">
+                <label for="busqueda-producto">Producto</label>
+                <div class="producto-buscador">
+                    <svg class="md-icon" aria-hidden="true"><use href="#icon-package"></use></svg>
+                    <input id="busqueda-producto" type="search" autocomplete="off" placeholder="Escribe nombre o SKU…" value="@(Model.ProductoSeleccionadoNombre == null ? "" : $"{Model.ProductoSeleccionadoNombre} · {Model.ProductoSeleccionadoSku}")" role="combobox" aria-autocomplete="list" aria-controls="resultados-productos" aria-expanded="false" data-product-input />
+                    <span class="producto-buscador-atajo" aria-hidden="true">Buscar</span>
+                </div>
+                <input type="hidden" asp-for="IdVariante" data-product-id />
+                <div id="resultados-productos" class="producto-resultados is-hidden" role="listbox" data-product-results></div>
+                <p class="ayuda-campo">Se muestran únicamente productos con existencias en esta sucursal.</p>
+                <span asp-validation-for="IdVariante" class="texto-error" data-product-error></span>
+                <article class="producto-seleccionado @(Model.IdVariante > 0 ? "" : "is-hidden")" data-selected-product>
+                    <span class="producto-seleccionado-check"><svg class="md-icon"><use href="#icon-check"></use></svg></span>
+                    <span class="producto-seleccionado-copy"><strong data-selected-name>@Model.ProductoSeleccionadoNombre</strong><small data-selected-sku>@Model.ProductoSeleccionadoSku</small></span>
+                    <span class="producto-seleccionado-meta"><strong data-selected-price>@(Model.ProductoSeleccionadoPrecio.HasValue ? $"${Model.ProductoSeleccionadoPrecio:0.00}" : "")</strong><small><span data-selected-stock>@Model.ProductoSeleccionadoStock</span> disponibles</small></span>
+                </article>
+            </div>
             <div class="campo"><label asp-for="Cantidad">Cantidad</label><input asp-for="Cantidad" type="number" min="1" /><span asp-validation-for="Cantidad" class="texto-error"></span></div>
             <div class="campo"><label asp-for="Fecha">Fecha</label><input asp-for="Fecha" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" /><span asp-validation-for="Fecha" class="texto-error"></span></div>
-            <div class="botones-formulario"><button type="submit" class="boton-guardar">Guardar venta</button><a asp-action="inicio" class="boton-regresar">Cancelar</a></div>
+            <div class="botones-formulario"><button type="submit" class="boton-guardar">Registrar venta</button><a asp-action="inicio" class="boton-regresar">Cancelar</a></div>
         </form>
     </div>
 </div>
-@section Scripts { <partial name="_ValidationScriptsPartial" /> }
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/ventas.js" asp-append-version="true"></script>
+}

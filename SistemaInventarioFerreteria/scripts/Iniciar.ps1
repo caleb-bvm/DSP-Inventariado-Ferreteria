@@ -13,6 +13,7 @@ $projectDirectory = Split-Path -Parent $PSScriptRoot
 $projectFile = Join-Path $projectDirectory "SistemaInventarioFerreteria.csproj"
 $nugetConfig = Join-Path $projectDirectory "NuGet.Config"
 $databaseScript = Join-Path (Split-Path -Parent $projectDirectory) "BaseDatos.txt"
+$demoDataScript = Join-Path (Split-Path -Parent $projectDirectory) "DatosDemostracion.sql"
 $applicationDll = Join-Path $projectDirectory "bin\Debug\net10.0\SistemaInventarioFerreteria.dll"
 $applicationUrl = "http://localhost:5118"
 
@@ -140,6 +141,10 @@ try {
         throw "No se encontro el archivo de base de datos: $databaseScript"
     }
 
+    if (-not (Test-Path -LiteralPath $demoDataScript)) {
+        throw "No se encontro el archivo de datos demostrativos: $demoDataScript"
+    }
+
     if ($SqlServer.StartsWith(".\", [System.StringComparison]::Ordinal)) {
         $instanceName = $SqlServer.Substring(2)
         $serviceName = "MSSQL`$$instanceName"
@@ -181,7 +186,7 @@ try {
         ) | ForEach-Object { Write-Host $_ }
     }
     else {
-        Write-Step "La base InventarioFerreteriaDB ya existe; no se modificaran sus datos"
+        Write-Step "La base InventarioFerreteriaDB ya existe; se conservaran sus datos"
     }
 
     $schemaStatus = Invoke-SqlCommand -Arguments @(
@@ -195,6 +200,12 @@ try {
     if ($schemaTableCount -ne "13") {
         throw "La base existe, pero su estructura esta incompleta ($schemaTableCount de 13 tablas esperadas). No se sobrescribio ningun dato."
     }
+
+    Write-Step "Comprobando los datos demostrativos"
+    Invoke-SqlCommand -Arguments @(
+        "-d", "InventarioFerreteriaDB",
+        "-i", $demoDataScript
+    ) | ForEach-Object { Write-Host $_ }
 
     $connectionString = "Server=$SqlServer;Database=InventarioFerreteriaDB;Integrated Security=True;Encrypt=False;MultipleActiveResultSets=True;"
     $env:ConnectionStrings__ConexionSQL = $connectionString

@@ -1,4 +1,5 @@
 using System.Data;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -18,12 +19,24 @@ namespace SistemaInventarioFerreteria.Controllers
 
         public async Task<IActionResult> inicio()
         {
-            var ventas = await _context.Ventas
+            var consulta = _context.Ventas
                 .AsNoTracking()
                 .Include(v => v.Sucursal)
                 .Include(v => v.Detalles)
                     .ThenInclude(d => d.VarianteProducto)
                         .ThenInclude(v => v!.Producto)
+                .AsQueryable();
+
+            var idSucursalOperador = ObtenerSucursalOperador();
+            if (User.IsInRole("Operador"))
+            {
+                if (!idSucursalOperador.HasValue) return Forbid();
+                consulta = consulta.Where(v =>
+                    v.IdSucursal == idSucursalOperador.Value);
+                ViewBag.SucursalOperador = User.FindFirstValue("SucursalNombre");
+            }
+
+            var ventas = await consulta
                 .OrderByDescending(v => v.Fecha)
                 .ToListAsync();
 
@@ -35,24 +48,30 @@ namespace SistemaInventarioFerreteria.Controllers
             if (id == null) return NotFound();
 
             var venta = await ObtenerCompletaAsync(id.Value);
-            return venta == null ? NotFound() : View(venta);
+            return venta == null || !PuedeAcceder(venta.IdSucursal)
+                ? NotFound()
+                : View(venta);
         }
 
         public async Task<IActionResult> crear()
         {
-            await CargarListasAsync();
-            return View(new VentaFormulario());
+            var modelo = new VentaFormulario();
+            if (!AplicarSucursalOperador(modelo)) return Forbid();
+
+            await CargarFormularioAsync(modelo);
+            return View(modelo);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> crear(VentaFormulario modelo)
         {
+            if (!AplicarSucursalOperador(modelo)) return Forbid();
             await ValidarReferenciasAsync(modelo);
 
             if (!ModelState.IsValid)
             {
-                await CargarListasAsync(modelo.IdSucursal, modelo.IdVariante);
+                await CargarFormularioAsync(modelo);
                 return View(modelo);
             }
 
@@ -109,7 +128,7 @@ namespace SistemaInventarioFerreteria.Controllers
                     "No fue posible registrar la venta. Verifique los datos.");
             }
 
-            await CargarListasAsync(modelo.IdSucursal, modelo.IdVariante);
+            await CargarFormularioAsync(modelo);
             return View(modelo);
         }
 
@@ -118,7 +137,7 @@ namespace SistemaInventarioFerreteria.Controllers
             if (id == null) return NotFound();
 
             var venta = await ObtenerCompletaAsync(id.Value);
-            if (venta == null) return NotFound();
+            if (venta == null || !PuedeAcceder(venta.IdSucursal)) return NotFound();
 
             var detalle = venta.Detalles.FirstOrDefault();
             if (detalle == null) return NotFound();
@@ -132,7 +151,8 @@ namespace SistemaInventarioFerreteria.Controllers
                 Fecha = venta.Fecha
             };
 
-            await CargarListasAsync(modelo.IdSucursal, modelo.IdVariante);
+            AplicarSucursalOperador(modelo);
+            await CargarFormularioAsync(modelo);
             return View(modelo);
         }
 
@@ -142,11 +162,20 @@ namespace SistemaInventarioFerreteria.Controllers
         {
             if (id != modelo.IdVenta) return NotFound();
 
+            var idSucursalOriginal = await _context.Ventas
+                .AsNoTracking()
+                .Where(v => v.IdVenta == id)
+                .Select(v => (int?)v.IdSucursal)
+                .FirstOrDefaultAsync();
+            if (!idSucursalOriginal.HasValue ||
+                !PuedeAcceder(idSucursalOriginal.Value)) return NotFound();
+
+            if (!AplicarSucursalOperador(modelo)) return Forbid();
             await ValidarReferenciasAsync(modelo);
 
             if (!ModelState.IsValid)
             {
-                await CargarListasAsync(modelo.IdSucursal, modelo.IdVariante);
+                await CargarFormularioAsync(modelo);
                 return View(modelo);
             }
 
@@ -220,7 +249,7 @@ namespace SistemaInventarioFerreteria.Controllers
                     "No fue posible actualizar la venta.");
             }
 
-            await CargarListasAsync(modelo.IdSucursal, modelo.IdVariante);
+            await CargarFormularioAsync(modelo);
             return View(modelo);
         }
 
@@ -229,7 +258,9 @@ namespace SistemaInventarioFerreteria.Controllers
             if (id == null) return NotFound();
 
             var venta = await ObtenerCompletaAsync(id.Value);
-            return venta == null ? NotFound() : View(venta);
+            return venta == null || !PuedeAcceder(venta.IdSucursal)
+                ? NotFound()
+                : View(venta);
         }
 
         [HttpPost]
@@ -246,6 +277,7 @@ namespace SistemaInventarioFerreteria.Controllers
                     .FirstOrDefaultAsync(v => v.IdVenta == id);
 
                 if (venta == null) return RedirectToAction(nameof(inicio));
+                if (!PuedeAcceder(venta.IdSucursal)) return NotFound();
 
                 foreach (var detalle in venta.Detalles)
                 {
@@ -276,6 +308,54 @@ namespace SistemaInventarioFerreteria.Controllers
             return ventaConError == null ? NotFound() : View(ventaConError);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> buscarProductos(
+            string? termino, int? idSucursal)
+        {
+            var sucursal = User.IsInRole("Operador")
+                ? ObtenerSucursalOperador()
+                : idSucursal;
+
+            if (!sucursal.HasValue || sucursal.Value <= 0)
+            {
+                return BadRequest(new { mensaje = "Seleccione una sucursal." });
+            }
+
+            var consulta = _context.Inventarios
+                .AsNoTracking()
+                .Where(i => i.IdSucursal == sucursal.Value &&
+                    i.Cantidad > 0 &&
+                    i.VarianteProducto!.Activo &&
+                    i.VarianteProducto.Producto!.Activo);
+
+            var texto = termino?.Trim();
+            if (!string.IsNullOrWhiteSpace(texto))
+            {
+                consulta = consulta.Where(i =>
+                    i.VarianteProducto!.SKU.Contains(texto) ||
+                    i.VarianteProducto.Producto!.Nombre.Contains(texto));
+            }
+
+            var productos = await consulta
+                .OrderBy(i => i.VarianteProducto!.Producto!.Nombre)
+                .ThenBy(i => i.VarianteProducto!.SKU)
+                .Take(12)
+                .Select(i => new
+                {
+                    id = i.IdVariante,
+                    nombre = i.VarianteProducto!.Producto!.Nombre,
+                    sku = i.VarianteProducto.SKU,
+                    detalle = i.VarianteProducto.Presentacion ??
+                        i.VarianteProducto.Medida ??
+                        i.VarianteProducto.Tamano ?? "Producto",
+                    precio = i.VarianteProducto.PrecioVenta,
+                    existencia = i.Cantidad
+                })
+                .ToListAsync();
+
+            return Json(productos);
+        }
+
         private Task<Venta?> ObtenerCompletaAsync(int id)
         {
             return _context.Ventas
@@ -296,41 +376,94 @@ namespace SistemaInventarioFerreteria.Controllers
         private async Task ValidarReferenciasAsync(VentaFormulario modelo)
         {
             if (modelo.IdSucursal > 0 &&
-                !await _context.Sucursales.AnyAsync(s => s.IdSucursal == modelo.IdSucursal))
+                !await _context.Sucursales.AnyAsync(s =>
+                    s.IdSucursal == modelo.IdSucursal && s.Activo))
             {
                 ModelState.AddModelError(nameof(modelo.IdSucursal),
-                    "La sucursal seleccionada no existe.");
+                    "La sucursal seleccionada no existe o está inactiva.");
             }
 
             if (modelo.IdVariante > 0 &&
-                !await _context.VariantesProducto.AnyAsync(v => v.IdVariante == modelo.IdVariante))
+                !await _context.Inventarios.AnyAsync(i =>
+                    i.IdSucursal == modelo.IdSucursal &&
+                    i.IdVariante == modelo.IdVariante &&
+                    i.VarianteProducto!.Activo &&
+                    i.VarianteProducto.Producto!.Activo))
             {
                 ModelState.AddModelError(nameof(modelo.IdVariante),
-                    "La variante seleccionada no existe.");
+                    "El producto no está disponible en esta sucursal.");
             }
         }
 
-        private async Task CargarListasAsync(int? idSucursal = null, int? idVariante = null)
+        private async Task CargarFormularioAsync(VentaFormulario modelo)
         {
-            ViewBag.Sucursales = new SelectList(
-                await _context.Sucursales.AsNoTracking().OrderBy(s => s.Nombre).ToListAsync(),
-                "IdSucursal", "Nombre", idSucursal);
+            modelo.SucursalFija = User.IsInRole("Operador");
+            if (modelo.SucursalFija)
+            {
+                modelo.SucursalNombre = User.FindFirstValue("SucursalNombre") ??
+                    await _context.Sucursales
+                        .Where(s => s.IdSucursal == modelo.IdSucursal)
+                        .Select(s => s.Nombre)
+                        .FirstOrDefaultAsync();
+            }
+            else
+            {
+                ViewBag.Sucursales = new SelectList(
+                    await _context.Sucursales
+                        .AsNoTracking()
+                        .Where(s => s.Activo)
+                        .OrderBy(s => s.Nombre)
+                        .ToListAsync(),
+                    "IdSucursal", "Nombre", modelo.IdSucursal);
+            }
 
-            var variantes = await _context.VariantesProducto
+            if (modelo.IdSucursal <= 0 || modelo.IdVariante <= 0) return;
+
+            var producto = await _context.Inventarios
                 .AsNoTracking()
-                .Include(v => v.Producto)
-                .Where(v => v.Activo)
-                .OrderBy(v => v.SKU)
-                .Select(v => new
+                .Where(i => i.IdSucursal == modelo.IdSucursal &&
+                    i.IdVariante == modelo.IdVariante)
+                .Select(i => new
                 {
-                    v.IdVariante,
-                    Texto = v.SKU + " - " + v.Producto!.Nombre +
-                        " ($" + v.PrecioVenta.ToString("0.00") + ")"
+                    Nombre = i.VarianteProducto!.Producto!.Nombre,
+                    i.VarianteProducto.SKU,
+                    Stock = i.Cantidad,
+                    Precio = i.VarianteProducto.PrecioVenta
                 })
-                .ToListAsync();
+                .FirstOrDefaultAsync();
 
-            ViewBag.Variantes = new SelectList(
-                variantes, "IdVariante", "Texto", idVariante);
+            if (producto == null) return;
+
+            modelo.ProductoSeleccionadoNombre = producto.Nombre;
+            modelo.ProductoSeleccionadoSku = producto.SKU;
+            modelo.ProductoSeleccionadoStock = producto.Stock;
+            modelo.ProductoSeleccionadoPrecio = producto.Precio;
+        }
+
+        private int? ObtenerSucursalOperador()
+        {
+            var valor = User.FindFirstValue("SucursalId");
+            return int.TryParse(valor, out var idSucursal)
+                ? idSucursal
+                : null;
+        }
+
+        private bool AplicarSucursalOperador(VentaFormulario modelo)
+        {
+            if (!User.IsInRole("Operador")) return true;
+
+            var idSucursal = ObtenerSucursalOperador();
+            if (!idSucursal.HasValue) return false;
+
+            ModelState.Remove(nameof(modelo.IdSucursal));
+            modelo.IdSucursal = idSucursal.Value;
+            return true;
+        }
+
+        private bool PuedeAcceder(int idSucursal)
+        {
+            return User.IsInRole("Administrador") ||
+                ObtenerSucursalOperador() == idSucursal;
         }
     }
 }

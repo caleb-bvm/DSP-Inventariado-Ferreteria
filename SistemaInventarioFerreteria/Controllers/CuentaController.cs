@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using SistemaInventarioFerreteria.Data;
 using SistemaInventarioFerreteria.Models;
 
 namespace SistemaInventarioFerreteria.Controllers
@@ -11,10 +13,14 @@ namespace SistemaInventarioFerreteria.Controllers
     public class CuentaController : Controller
     {
         private readonly IConfiguration _configuration;
+        private readonly ApplicationDbContext _context;
 
-        public CuentaController(IConfiguration configuration)
+        public CuentaController(
+            IConfiguration configuration,
+            ApplicationDbContext context)
         {
             _configuration = configuration;
+            _context = context;
         }
 
         public IActionResult Login()
@@ -48,6 +54,30 @@ namespace SistemaInventarioFerreteria.Controllers
                 new(ClaimTypes.Name, modelo.Usuario),
                 new(ClaimTypes.Role, rol)
             };
+
+            if (rol == "Operador")
+            {
+                var idSucursal = _configuration.GetValue<int?>(
+                    "Login:Operador:IdSucursal");
+                var sucursal = idSucursal.HasValue
+                    ? await _context.Sucursales
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync(s =>
+                            s.IdSucursal == idSucursal.Value && s.Activo)
+                    : null;
+
+                if (sucursal == null)
+                {
+                    ModelState.AddModelError(string.Empty,
+                        "El operador no tiene una sucursal activa asignada. " +
+                        "Solicite al administrador revisar la configuración.");
+                    return View(modelo);
+                }
+
+                claims.Add(new Claim("SucursalId",
+                    sucursal.IdSucursal.ToString()));
+                claims.Add(new Claim("SucursalNombre", sucursal.Nombre));
+            }
 
             var identity = new ClaimsIdentity(
                 claims,

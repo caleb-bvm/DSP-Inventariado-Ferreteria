@@ -18,5 +18,13 @@ namespace SistemaInventarioFerreteria.Models
 
         [Required(ErrorMessage = "La fecha es obligatoria.")]
         public DateTime Fecha { get; set; } = DateTime.Now;
+
+        // Datos de presentación. La sucursal efectiva siempre se valida en el servidor.
+        public bool SucursalFija { get; set; }
+        public string? SucursalNombre { get; set; }
+        public string? ProductoSeleccionadoNombre { get; set; }
+        public string? ProductoSeleccionadoSku { get; set; }
+        public int? ProductoSeleccionadoStock { get; set; }
+        public decimal? ProductoSeleccionadoPrecio { get; set; }
     }
 }

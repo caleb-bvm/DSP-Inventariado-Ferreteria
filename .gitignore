@@ -11,6 +11,7 @@ tmp/
 *.tmp
 *.user
 *.suo
+~$*
 
 # Configuracion local y secretos
 .env
