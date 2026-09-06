@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="940" viewBox="0 0 1600 940">
+  <defs>
+    <style>
+      .title { font: 700 42px Arial, sans-serif; fill: #17365d; }
+      .subtitle { font: 400 22px Arial, sans-serif; fill: #425466; }
+      .box-title { font: 700 25px Arial, sans-serif; fill: #17365d; }
+      .box-text { font: 400 20px Arial, sans-serif; fill: #253648; }
+      .small { font: 400 18px Arial, sans-serif; fill: #425466; }
+      .arrow { stroke: #326b9b; stroke-width: 5; fill: none; marker-end: url(#arrow); }
+    </style>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="5" stdDeviation="7" flood-color="#17365d" flood-opacity="0.18"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#326b9b"/>
+    </marker>
+  </defs>
+
+  <rect width="1600" height="940" fill="#f5f8fb"/>
+  <text x="800" y="68" text-anchor="middle" class="title">Diagrama de bloques de la solución propuesta</text>
+  <text x="800" y="105" text-anchor="middle" class="subtitle">Sistema web inteligente para la gestión de renta de vehículos</text>
+
+  <g filter="url(#shadow)">
+    <rect x="65" y="225" width="260" height="185" rx="22" fill="#ffffff" stroke="#6ba4cf" stroke-width="4"/>
+    <text x="195" y="275" text-anchor="middle" class="box-title">Usuarios</text>
+    <text x="195" y="320" text-anchor="middle" class="box-text">Cliente</text>
+    <text x="195" y="352" text-anchor="middle" class="box-text">Empleado</text>
+    <text x="195" y="384" text-anchor="middle" class="box-text">Administrador</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="430" y="170" width="380" height="295" rx="22" fill="#e8f3fb" stroke="#326b9b" stroke-width="4"/>
+    <text x="620" y="220" text-anchor="middle" class="box-title">Aplicación web</text>
+    <text x="620" y="258" text-anchor="middle" class="small">ASP.NET Core MVC / API</text>
+    <line x1="465" y1="282" x2="775" y2="282" stroke="#91b7d3" stroke-width="2"/>
+    <text x="620" y="320" text-anchor="middle" class="box-text">Autenticación y roles</text>
+    <text x="620" y="355" text-anchor="middle" class="box-text">Flota y mantenimiento</text>
+    <text x="620" y="390" text-anchor="middle" class="box-text">Reservas y alquileres</text>
+    <text x="620" y="425" text-anchor="middle" class="box-text">Reportes y auditoría</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="930" y="145" width="300" height="180" rx="22" fill="#ffffff" stroke="#4c9b77" stroke-width="4"/>
+    <text x="1080" y="198" text-anchor="middle" class="box-title">Capa de datos</text>
+    <text x="1080" y="240" text-anchor="middle" class="box-text">Entity Framework Core</text>
+    <text x="1080" y="276" text-anchor="middle" class="box-text">PostgreSQL</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="930" y="390" width="300" height="205" rx="22" fill="#fff8e8" stroke="#d19a32" stroke-width="4"/>
+    <text x="1080" y="442" text-anchor="middle" class="box-title">Servicio de IA</text>
+    <text x="1080" y="484" text-anchor="middle" class="box-text">Recomendador</text>
+    <text x="1080" y="519" text-anchor="middle" class="box-text">de vehículos</text>
+    <text x="1080" y="558" text-anchor="middle" class="small">Microsoft Foundry /</text>
+    <text x="1080" y="583" text-anchor="middle" class="small">Azure OpenAI</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="1310" y="245" width="230" height="240" rx="22" fill="#f0ecfb" stroke="#7957a8" stroke-width="4"/>
+    <text x="1425" y="298" text-anchor="middle" class="box-title">Servicios</text>
+    <text x="1425" y="330" text-anchor="middle" class="box-title">externos</text>
+    <text x="1425" y="382" text-anchor="middle" class="box-text">Correo</text>
+    <text x="1425" y="417" text-anchor="middle" class="box-text">Almacenamiento</text>
+    <text x="1425" y="452" text-anchor="middle" class="box-text">Monitoreo</text>
+  </g>
+
+  <path d="M325 317 H430" class="arrow"/>
+  <path d="M810 260 H930" class="arrow"/>
+  <path d="M810 375 C865 375 865 492 930 492" class="arrow"/>
+  <path d="M1230 362 H1310" class="arrow"/>
+
+  <g filter="url(#shadow)">
+    <rect x="315" y="705" width="970" height="145" rx="22" fill="#17365d"/>
+    <text x="800" y="755" text-anchor="middle" style="font:700 27px Arial,sans-serif;fill:#ffffff">Infraestructura y despliegue</text>
+    <text x="800" y="797" text-anchor="middle" style="font:400 22px Arial,sans-serif;fill:#e6f1fa">Docker · Azure Container Apps · Azure Database for PostgreSQL</text>
+    <text x="800" y="829" text-anchor="middle" style="font:400 19px Arial,sans-serif;fill:#bcd7eb">HTTPS · secretos protegidos · registros · copias de seguridad</text>
+  </g>
+
+  <path d="M620 465 V705" class="arrow"/>
+  <path d="M1080 595 V705" class="arrow"/>
+
+  <text x="800" y="905" text-anchor="middle" class="small">Flujo principal: usuario → aplicación → datos / IA → respuesta y registro de la operación</text>
+</svg>

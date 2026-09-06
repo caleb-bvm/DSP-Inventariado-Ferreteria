@@ -1,0 +1,292 @@
+{
+  "version": 1,
+  "kind": "google-docs-trusted-read-context",
+  "target": {
+    "documentId": "1JFZqNPp4z2DCGH23P2_rdwhriq9tg7oHRMLRMmlATq4",
+    "title": "Documentación de Proyecto de Cátedra",
+    "revisionId": "AIroW377mFadEWDHVxMvvwizm-yWgmjOORjSr1LnNvUWbVOFc4Ek1YaODWib05TZHLyWxT3JJXzWLiJGp7OrGGSZS1gDvLDNLr_2O_sAtmI",
+    "documentUrl": "https://docs.google.com/document/d/1JFZqNPp4z2DCGH23P2_rdwhriq9tg7oHRMLRMmlATq4",
+    "selectedTabId": "t.0"
+  },
+  "dropdownMetadata": {
+    "status": "unavailable",
+    "resolvedTool": null,
+    "authoritative": false,
+    "count": 0
+  },
+  "derivedControlInventory": {
+    "hasProtectedControls": false,
+    "authoritativeDropdownCount": 0,
+    "opaqueControlCount": 0,
+    "nativeElementCounts": {
+      "inlineObjectElement": 7
+    },
+    "tabsScanned": [
+      "t.0"
+    ],
+    "controls": [],
+    "nativeElements": [
+      {
+        "type": "inlineObjectElement",
+        "startIndex": 1,
+        "endIndex": 2,
+        "tabId": "t.0",
+        "segmentId": null,
+        "container": {
+          "kind": "paragraph",
+          "path": "root.tabs[0].body.content[1]",
+          "tabId": "t.0",
+          "segmentId": null,
+          "startIndex": 1,
+          "endIndex": 3,
+          "namedStyleType": "NORMAL_TEXT",
+          "listId": null,
+          "nestingLevel": null,
+          "table": null
+        },
+        "properties": {
+          "inlineObjectId": "kix.f9jk8pn2ncwu",
+          "textStyle": {
+            "fontSize": {
+              "magnitude": 12,
+              "unit": "PT"
+            },
+            "weightedFontFamily": {
+              "fontFamily": "Times New Roman",
+              "weight": 400
+            }
+          }
+        }
+      },
+      {
+        "type": "inlineObjectElement",
+        "startIndex": 9106,
+        "endIndex": 9107,
+        "tabId": "t.0",
+        "segmentId": null,
+        "container": {
+          "kind": "paragraph",
+          "path": "root.tabs[0].body.content[75]",
+          "tabId": "t.0",
+          "segmentId": null,
+          "startIndex": 9106,
+          "endIndex": 9108,
+          "namedStyleType": "NORMAL_TEXT",
+          "listId": null,
+          "nestingLevel": null,
+          "table": null
+        },
+        "properties": {
+          "inlineObjectId": "kix.x701itkm53mn",
+          "textStyle": {
+            "fontSize": {
+              "magnitude": 12,
+              "unit": "PT"
+            },
+            "weightedFontFamily": {
+              "fontFamily": "Times New Roman",
+              "weight": 400
+            }
+          }
+        }
+      },
+      {
+        "type": "inlineObjectElement",
+        "startIndex": 14060,
+        "endIndex": 14061,
+        "tabId": "t.0",
+        "segmentId": null,
+        "container": {
+          "kind": "paragraph",
+          "path": "root.tabs[0].body.content[108]",
+          "tabId": "t.0",
+          "segmentId": null,
+          "startIndex": 14060,
+          "endIndex": 14062,
+          "namedStyleType": "NORMAL_TEXT",
+          "listId": null,
+          "nestingLevel": null,
+          "table": null
+        },
+        "properties": {
+          "inlineObjectId": "kix.goofdh6kqw2u",
+          "textStyle": {
+            "bold": true,
+            "foregroundColor": {
+              "color": {
+                "rgbColor": {
+                  "red": 0.06666667,
+                  "green": 0.20392157,
+                  "blue": 0.3647059
+                }
+              }
+            },
+            "fontSize": {
+              "magnitude": 12,
+              "unit": "PT"
+            },
+            "weightedFontFamily": {
+              "fontFamily": "Times New Roman",
+              "weight": 400
+            }
+          }
+        }
+      },
+      {
+        "type": "inlineObjectElement",
+        "startIndex": 14062,
+        "endIndex": 14063,
+        "tabId": "t.0",
+        "segmentId": null,
+        "container": {
+          "kind": "paragraph",
+          "path": "root.tabs[0].body.content[109]",
+          "tabId": "t.0",
+          "segmentId": null,
+          "startIndex": 14062,
+          "endIndex": 14064,
+          "namedStyleType": "NORMAL_TEXT",
+          "listId": null,
+          "nestingLevel": null,
+          "table": null
+        },
+        "properties": {
+          "inlineObjectId": "kix.xyj43myrtehz",
+          "textStyle": {
+            "bold": true,
+            "foregroundColor": {
+              "color": {
+                "rgbColor": {
+                  "red": 0.06666667,
+                  "green": 0.20392157,
+                  "blue": 0.3647059
+                }
+              }
+            },
+            "fontSize": {
+              "magnitude": 12,
+              "unit": "PT"
+            },
+            "weightedFontFamily": {
+              "fontFamily": "Times New Roman",
+              "weight": 400
+            }
+          }
+        }
+      },
+      {
+        "type": "inlineObjectElement",
+        "startIndex": 14064,
+        "endIndex": 14065,
+        "tabId": "t.0",
+        "segmentId": null,
+        "container": {
+          "kind": "paragraph",
+          "path": "root.tabs[0].body.content[110]",
+          "tabId": "t.0",
+          "segmentId": null,
+          "startIndex": 14064,
+          "endIndex": 14066,
+          "namedStyleType": "NORMAL_TEXT",
+          "listId": null,
+          "nestingLevel": null,
+          "table": null
+        },
+        "properties": {
+          "inlineObjectId": "kix.d9h1d3o9e4dv",
+          "textStyle": {
+            "bold": true,
+            "foregroundColor": {
+              "color": {
+                "rgbColor": {
+                  "red": 0.06666667,
+                  "green": 0.20392157,
+                  "blue": 0.3647059
+                }
+              }
+            },
+            "fontSize": {
+              "magnitude": 12,
+              "unit": "PT"
+            },
+            "weightedFontFamily": {
+              "fontFamily": "Times New Roman",
+              "weight": 400
+            }
+          }
+        }
+      },
+      {
+        "type": "inlineObjectElement",
+        "startIndex": 14066,
+        "endIndex": 14067,
+        "tabId": "t.0",
+        "segmentId": null,
+        "container": {
+          "kind": "paragraph",
+          "path": "root.tabs[0].body.content[111]",
+          "tabId": "t.0",
+          "segmentId": null,
+          "startIndex": 14066,
+          "endIndex": 14068,
+          "namedStyleType": "NORMAL_TEXT",
+          "listId": null,
+          "nestingLevel": null,
+          "table": null
+        },
+        "properties": {
+          "inlineObjectId": "kix.21e77mr44i2t",
+          "textStyle": {
+            "bold": true,
+            "foregroundColor": {
+              "color": {
+                "rgbColor": {
+                  "red": 0.06666667,
+                  "green": 0.20392157,
+                  "blue": 0.3647059
+                }
+              }
+            },
+            "fontSize": {
+              "magnitude": 12,
+              "unit": "PT"
+            },
+            "weightedFontFamily": {
+              "fontFamily": "Times New Roman",
+              "weight": 400
+            }
+          }
+        }
+      },
+      {
+        "type": "inlineObjectElement",
+        "startIndex": 19738,
+        "endIndex": 19739,
+        "tabId": "t.0",
+        "segmentId": null,
+        "container": {
+          "kind": "paragraph",
+          "path": "root.tabs[0].body.content[145]",
+          "tabId": "t.0",
+          "segmentId": null,
+          "startIndex": 19738,
+          "endIndex": 19740,
+          "namedStyleType": "NORMAL_TEXT",
+          "listId": null,
+          "nestingLevel": null,
+          "table": null
+        },
+        "properties": {
+          "inlineObjectId": "kix.qozee56vgfhk",
+          "textStyle": {}
+        }
+      }
+    ]
+  },
+  "editGuidance": {
+    "advisoryOnly": true,
+    "requiresTargetedPreservation": false,
+    "recommendedBehavior": "No protected controls were detected in the scanned scope.",
+    "warnings": []
+  }
+}

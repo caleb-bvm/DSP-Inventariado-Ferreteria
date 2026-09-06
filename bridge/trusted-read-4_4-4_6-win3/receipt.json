@@ -1,0 +1,31 @@
+{
+  "bridgeVersion": "3.6",
+  "kind": "google-docs-trusted-read-receipt",
+  "status": "complete",
+  "target": {
+    "documentId": "1JFZqNPp4z2DCGH23P2_rdwhriq9tg7oHRMLRMmlATq4",
+    "title": "Documentación de Proyecto de Cátedra",
+    "revisionId": "AIroW377mFadEWDHVxMvvwizm-yWgmjOORjSr1LnNvUWbVOFc4Ek1YaODWib05TZHLyWxT3JJXzWLiJGp7OrGGSZS1gDvLDNLr_2O_sAtmI",
+    "documentUrl": "https://docs.google.com/document/d/1JFZqNPp4z2DCGH23P2_rdwhriq9tg7oHRMLRMmlATq4",
+    "selectedTabId": "t.0"
+  },
+  "dropdownMetadata": {
+    "status": "unavailable",
+    "resolvedTool": null,
+    "authoritative": false,
+    "count": 0
+  },
+  "controlAwareness": {
+    "hasProtectedControls": false,
+    "authoritativeDropdownCount": 0,
+    "opaqueControlCount": 0,
+    "affectedParagraphCount": 0,
+    "nativeElementCounts": {
+      "inlineObjectElement": 7
+    },
+    "preservationRequired": false,
+    "recommendedBehavior": "No protected controls were detected in the scanned scope."
+  },
+  "warnings": [],
+  "error": null
+}

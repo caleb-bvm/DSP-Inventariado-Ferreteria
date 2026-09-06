@@ -1,0 +1,4 @@
+Fuente principal: Documentacion_Proyecto_Catedra_QA.pdf, versión final de 30 páginas.
+Activos internos: prototipos de las páginas 14 y 15, diagrama entidad-relación de la página 19, diagrama de bloques en assets/ y diagramas UML en diagramas/.
+Fuentes externas: referencias [1] a [11] de la bibliografía del documento.
+Dirección visual: fondo blanco, texto negro, líneas grises/negras, sin ornamentación.
