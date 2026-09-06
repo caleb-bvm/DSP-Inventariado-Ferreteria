@@ -1,0 +1,10 @@
+@{ ViewData["Title"] = "Acceso denegado"; }
+
+<section class="error-page">
+    <div class="error-card">
+        <div class="error-icon"><svg class="md-icon"><use href="#icon-warning"></use></svg></div>
+        <h1>Acceso denegado</h1>
+        <p>Tu perfil no tiene permiso para realizar esta operación.</p>
+        <div class="page-actions"><a asp-controller="Home" asp-action="Index" class="btn btn-primary">Volver al inicio</a></div>
+    </div>
+</section>

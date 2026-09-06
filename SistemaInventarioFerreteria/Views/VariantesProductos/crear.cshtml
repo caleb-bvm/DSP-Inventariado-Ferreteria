@@ -1,0 +1,25 @@
+@model SistemaInventarioFerreteria.Models.VarianteProducto
+@{ ViewData["Title"] = "Nueva variante"; }
+
+<div class="formulario-contenedor">
+    <div class="formulario-encabezado"><h1>Nueva variante</h1><p>Registra una presentación única del producto.</p></div>
+    <div class="formulario-tarjeta">
+        <form asp-action="crear" method="post">
+            <div asp-validation-summary="ModelOnly" class="texto-error"></div>
+            <div class="campo"><label asp-for="IdProducto">Producto</label><select asp-for="IdProducto" asp-items="ViewBag.Productos"><option value="">Seleccione un producto</option></select><span asp-validation-for="IdProducto" class="texto-error"></span></div>
+            <div class="campo"><label asp-for="IdMarca">Marca</label><select asp-for="IdMarca" asp-items="ViewBag.Marcas"><option value="">Sin marca</option></select></div>
+            <div class="campo"><label asp-for="SKU">SKU</label><input asp-for="SKU" placeholder="Ejemplo: TAL-BOS-500W-001" /><span asp-validation-for="SKU" class="texto-error"></span></div>
+            <div class="campo"><label asp-for="Color">Color</label><input asp-for="Color" /></div>
+            <div class="campo"><label asp-for="Tamano">Tamaño</label><input asp-for="Tamano" /></div>
+            <div class="campo"><label asp-for="Material">Material</label><input asp-for="Material" /></div>
+            <div class="campo"><label asp-for="Medida">Medida</label><input asp-for="Medida" /></div>
+            <div class="campo"><label asp-for="Presentacion">Presentación</label><input asp-for="Presentacion" placeholder="Unidad, caja, galón..." /></div>
+            <div class="campo"><label asp-for="PrecioCompra">Precio de compra</label><input asp-for="PrecioCompra" type="number" min="0.01" step="0.01" /><span asp-validation-for="PrecioCompra" class="texto-error"></span></div>
+            <div class="campo"><label asp-for="PrecioVenta">Precio de venta</label><input asp-for="PrecioVenta" type="number" min="0.01" step="0.01" /><span asp-validation-for="PrecioVenta" class="texto-error"></span></div>
+            <div class="campo"><label asp-for="StockMinimo">Stock mínimo</label><input asp-for="StockMinimo" type="number" min="0" /><span asp-validation-for="StockMinimo" class="texto-error"></span></div>
+            <div class="campo-check"><input asp-for="Activo" /><label asp-for="Activo">Variante activa</label></div>
+            <div class="botones-formulario"><button type="submit" class="boton-guardar">Guardar variante</button><a asp-action="inicio" class="boton-regresar">Cancelar</a></div>
+        </form>
+    </div>
+</div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

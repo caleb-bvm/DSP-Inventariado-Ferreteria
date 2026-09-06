@@ -1,0 +1,67 @@
+﻿@model SistemaInventarioFerreteria.Models.Inventario
+
+@{
+    ViewData["Title"] = "Eliminar inventario";
+}
+
+<div class="formulario-contenedor">
+    <div class="formulario-encabezado">
+        <h1>Eliminar inventario</h1>
+        <p>Confirma si deseas eliminar esta combinación de variante y sucursal.</p>
+    </div>
+
+    <div class="formulario-tarjeta">
+        <div asp-validation-summary="ModelOnly"
+             class="texto-error"></div>
+
+        <div class="mensaje-eliminar">
+            <h2>¿Estás seguro de eliminar este inventario?</h2>
+            <p>Esta acción no se puede deshacer.</p>
+        </div>
+
+        <div class="detalle-fila">
+            <span class="detalle-etiqueta">ID</span>
+            <span class="detalle-valor">@Model.IdInventario</span>
+        </div>
+
+        <div class="detalle-fila">
+            <span class="detalle-etiqueta">SKU</span>
+            <span class="detalle-valor">
+                @(Model.VarianteProducto?.SKU ?? "Sin SKU")
+            </span>
+        </div>
+
+        <div class="detalle-fila">
+            <span class="detalle-etiqueta">Producto</span>
+            <span class="detalle-valor">
+                @(Model.VarianteProducto?.Producto?.Nombre ?? "Sin producto")
+            </span>
+        </div>
+
+        <div class="detalle-fila">
+            <span class="detalle-etiqueta">Sucursal</span>
+            <span class="detalle-valor">
+                @(Model.Sucursal?.Nombre ?? "Sin sucursal")
+            </span>
+        </div>
+
+        <div class="detalle-fila">
+            <span class="detalle-etiqueta">Cantidad</span>
+            <span class="detalle-valor">@Model.Cantidad</span>
+        </div>
+
+        <form asp-action="eliminar"
+              asp-route-id="@Model.IdInventario"
+              method="post">
+
+            <div class="botones-formulario">
+                <button type="submit" class="boton-eliminar">
+                    Eliminar inventario
+                </button>
+                <a asp-action="inicio" class="boton-regresar">
+                    Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
+</div>

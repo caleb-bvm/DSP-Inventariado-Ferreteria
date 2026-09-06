@@ -1,0 +1,16 @@
+@model SistemaInventarioFerreteria.Models.Venta
+@{ ViewData["Title"] = "Detalle de venta"; var detalle = Model.Detalles.FirstOrDefault(); }
+
+<div class="formulario-contenedor">
+    <div class="formulario-encabezado"><h1>Venta #@Model.IdVenta</h1><p>Detalle del registro y su importe.</p></div>
+    <div class="formulario-tarjeta">
+        <div class="detalle-fila"><span class="detalle-etiqueta">Sucursal</span><strong class="detalle-valor">@Model.Sucursal?.Nombre</strong></div>
+        <div class="detalle-fila"><span class="detalle-etiqueta">Producto</span><strong class="detalle-valor">@detalle?.VarianteProducto?.Producto?.Nombre</strong></div>
+        <div class="detalle-fila"><span class="detalle-etiqueta">SKU</span><strong class="detalle-valor">@detalle?.VarianteProducto?.SKU</strong></div>
+        <div class="detalle-fila"><span class="detalle-etiqueta">Cantidad</span><strong class="detalle-valor">@detalle?.Cantidad</strong></div>
+        <div class="detalle-fila"><span class="detalle-etiqueta">Precio unitario</span><strong class="detalle-valor">$@detalle?.PrecioUnitario.ToString("0.00")</strong></div>
+        <div class="detalle-fila"><span class="detalle-etiqueta">Fecha</span><strong class="detalle-valor">@Model.Fecha.ToString("dd/MM/yyyy HH:mm")</strong></div>
+        <div class="detalle-fila"><span class="detalle-etiqueta">Total</span><strong class="detalle-valor">$@Model.Total.ToString("0.00")</strong></div>
+        <div class="botones-formulario"><a asp-action="editar" asp-route-id="@Model.IdVenta" class="boton-guardar">Editar</a><a asp-action="inicio" class="boton-regresar">Regresar</a></div>
+    </div>
+</div>

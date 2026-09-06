@@ -1,0 +1,85 @@
+﻿@model SistemaInventarioFerreteria.Models.EntradaInventario
+
+@{
+    ViewData["Title"] = "Detalles de la entrada";
+    var total = Model.Cantidad * Model.CostoUnitario;
+}
+
+<div class="formulario-contenedor">
+    <div class="formulario-encabezado">
+        <h1>Detalles de la entrada</h1>
+        <p>Consulta los datos del ingreso de mercadería.</p>
+    </div>
+
+    <div class="formulario-tarjeta">
+        <div class="detalle-fila">
+            <span class="detalle-etiqueta">ID</span>
+            <span class="detalle-valor">@Model.IdEntrada</span>
+        </div>
+
+        <div class="detalle-fila">
+            <span class="detalle-etiqueta">Fecha</span>
+            <span class="detalle-valor">
+                @Model.Fecha.ToString("dd/MM/yyyy HH:mm")
+            </span>
+        </div>
+
+        <div class="detalle-fila">
+            <span class="detalle-etiqueta">SKU</span>
+            <span class="detalle-valor">
+                @(Model.VarianteProducto?.SKU ?? "Sin SKU")
+            </span>
+        </div>
+
+        <div class="detalle-fila">
+            <span class="detalle-etiqueta">Producto</span>
+            <span class="detalle-valor">
+                @(Model.VarianteProducto?.Producto?.Nombre ?? "Sin producto")
+            </span>
+        </div>
+
+        <div class="detalle-fila">
+            <span class="detalle-etiqueta">Sucursal</span>
+            <span class="detalle-valor">
+                @(Model.Sucursal?.Nombre ?? "Sin sucursal")
+            </span>
+        </div>
+
+        <div class="detalle-fila">
+            <span class="detalle-etiqueta">Proveedor</span>
+            <span class="detalle-valor">
+                @(Model.Proveedor?.Nombre ?? "Sin proveedor")
+            </span>
+        </div>
+
+        <div class="detalle-fila">
+            <span class="detalle-etiqueta">Cantidad</span>
+            <span class="detalle-valor">@Model.Cantidad</span>
+        </div>
+
+        <div class="detalle-fila">
+            <span class="detalle-etiqueta">Costo unitario</span>
+            <span class="detalle-valor">
+                $@Model.CostoUnitario.ToString("N2")
+            </span>
+        </div>
+
+        <div class="detalle-fila">
+            <span class="detalle-etiqueta">Costo total</span>
+            <span class="detalle-valor">
+                $@total.ToString("N2")
+            </span>
+        </div>
+
+        <div class="botones-formulario">
+            <a asp-action="editar"
+               asp-route-id="@Model.IdEntrada"
+               class="boton-guardar">
+                Editar entrada
+            </a>
+            <a asp-action="inicio" class="boton-regresar">
+                Regresar
+            </a>
+        </div>
+    </div>
+</div>

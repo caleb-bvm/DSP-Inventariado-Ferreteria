@@ -1,0 +1,30 @@
+@model SistemaInventarioFerreteria.Models.Marca
+
+@{
+    ViewData["Title"] = "Editar Marca";
+}
+
+<div class="formulario-contenedor">
+    <div class="formulario-encabezado">
+        <h1>Editar marca</h1>
+        <p>Actualiza la información de la marca seleccionada.</p>
+    </div>
+
+    <div class="formulario-tarjeta">
+        <form asp-action="editar" asp-route-id="@Model.IdMarca" method="post">
+            <input type="hidden" asp-for="IdMarca" />
+            <div asp-validation-summary="ModelOnly" class="texto-error"></div>
+
+            <div class="campo">
+                <label asp-for="Nombre">Nombre de la marca</label>
+                <input asp-for="Nombre" maxlength="100" />
+                <span asp-validation-for="Nombre" class="texto-error"></span>
+            </div>
+
+            <div class="botones-formulario">
+                <button type="submit" class="boton-guardar">Guardar cambios</button>
+                <a asp-action="inicio" class="boton-regresar">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>

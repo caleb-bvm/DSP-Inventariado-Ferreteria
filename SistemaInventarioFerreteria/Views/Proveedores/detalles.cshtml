@@ -1,0 +1,39 @@
+@model SistemaInventarioFerreteria.Models.Proveedor
+
+@{
+    ViewData["Title"] = "Detalles del Proveedor";
+}
+
+<div class="formulario-contenedor">
+    <div class="formulario-encabezado">
+        <h1>Detalles del proveedor</h1>
+        <p>Consulta la información registrada del proveedor.</p>
+    </div>
+
+    <div class="formulario-tarjeta">
+        <div class="detalle-fila"><span class="detalle-etiqueta">ID</span><span class="detalle-valor">#@Model.IdProveedor</span></div>
+        <div class="detalle-fila"><span class="detalle-etiqueta">Nombre</span><span class="detalle-valor">@Model.Nombre</span></div>
+        <div class="detalle-fila"><span class="detalle-etiqueta">Teléfono</span><span class="detalle-valor">@(Model.Telefono ?? "Sin teléfono")</span></div>
+        <div class="detalle-fila"><span class="detalle-etiqueta">Correo</span><span class="detalle-valor">@(Model.Correo ?? "Sin correo")</span></div>
+        <div class="detalle-fila"><span class="detalle-etiqueta">Dirección</span><span class="detalle-valor">@(Model.Direccion ?? "Sin dirección")</span></div>
+        <div class="detalle-fila"><span class="detalle-etiqueta">Tiempo de entrega</span><span class="detalle-valor">@Model.TiempoEntregaDias días</span></div>
+        <div class="detalle-fila">
+            <span class="detalle-etiqueta">Estado</span>
+            <span class="detalle-valor">
+                @if (Model.Activo)
+                {
+                    <span class="estado-activo">Activo</span>
+                }
+                else
+                {
+                    <span class="estado-inactivo">Inactivo</span>
+                }
+            </span>
+        </div>
+
+        <div class="botones-formulario">
+            <a asp-action="editar" asp-route-id="@Model.IdProveedor" class="boton-guardar">Editar</a>
+            <a asp-action="inicio" class="boton-regresar">Regresar</a>
+        </div>
+    </div>
+</div>

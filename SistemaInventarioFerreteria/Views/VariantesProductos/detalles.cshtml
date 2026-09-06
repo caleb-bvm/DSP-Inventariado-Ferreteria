@@ -1,0 +1,15 @@
+@model SistemaInventarioFerreteria.Models.VarianteProducto
+@{ ViewData["Title"] = "Detalle de variante"; }
+
+<div class="formulario-contenedor">
+    <div class="formulario-encabezado"><h1>@Model.SKU</h1><p>Información de la variante seleccionada.</p></div>
+    <div class="formulario-tarjeta">
+        <div class="detalle-fila"><span class="detalle-etiqueta">Producto</span><strong class="detalle-valor">@Model.Producto?.Nombre</strong></div>
+        <div class="detalle-fila"><span class="detalle-etiqueta">Marca</span><strong class="detalle-valor">@(Model.Marca?.Nombre ?? "Sin marca")</strong></div>
+        <div class="detalle-fila"><span class="detalle-etiqueta">Características</span><strong class="detalle-valor">@string.Join(" · ", new[] { Model.Color, Model.Tamano, Model.Material, Model.Medida, Model.Presentacion }.Where(x => !string.IsNullOrWhiteSpace(x)))</strong></div>
+        <div class="detalle-fila"><span class="detalle-etiqueta">Precio compra</span><strong class="detalle-valor">$@Model.PrecioCompra.ToString("0.00")</strong></div>
+        <div class="detalle-fila"><span class="detalle-etiqueta">Precio venta</span><strong class="detalle-valor">$@Model.PrecioVenta.ToString("0.00")</strong></div>
+        <div class="detalle-fila"><span class="detalle-etiqueta">Stock mínimo</span><strong class="detalle-valor">@Model.StockMinimo</strong></div>
+        <div class="botones-formulario"><a asp-action="editar" asp-route-id="@Model.IdVariante" class="boton-guardar">Editar</a><a asp-action="inicio" class="boton-regresar">Regresar</a></div>
+    </div>
+</div>

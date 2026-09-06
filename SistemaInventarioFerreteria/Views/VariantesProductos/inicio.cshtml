@@ -1,0 +1,54 @@
+@model IEnumerable<SistemaInventarioFerreteria.Models.VarianteProducto>
+
+@{ ViewData["Title"] = "Variantes"; }
+
+<header class="page-header">
+    <div class="page-heading">
+        <span class="eyebrow">Catálogo</span>
+        <h1>Variantes de productos</h1>
+        <p>Administra SKU, marca, presentación, precios y stock mínimo.</p>
+    </div>
+    <div class="page-actions">
+        <a asp-action="crear" class="btn btn-primary">
+            <svg class="md-icon"><use href="#icon-plus"></use></svg>Nueva variante
+        </a>
+    </div>
+</header>
+
+<section class="contenedor-tabla">
+    <div class="titulo-tabla">
+        <div><h2>Listado de variantes</h2><p>Un SKU único identifica cada presentación.</p></div>
+        <span class="status-badge status-active">@Model.Count() registros</span>
+    </div>
+    <div class="table-scroll">
+        <table class="data-table">
+            <thead><tr><th>SKU</th><th>Producto</th><th>Marca</th><th>Presentación</th><th>Venta</th><th>Mínimo</th><th>Estado</th><th>Acciones</th></tr></thead>
+            <tbody>
+            @if (!Model.Any())
+            {
+                <tr><td colspan="8" class="empty-state"><strong>Aún no hay variantes</strong>Agrega la primera variante del catálogo.</td></tr>
+            }
+            else
+            {
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td><strong>@item.SKU</strong></td>
+                        <td>@item.Producto?.Nombre</td>
+                        <td>@(item.Marca?.Nombre ?? "Sin marca")</td>
+                        <td>@(item.Presentacion ?? item.Medida ?? "-")</td>
+                        <td>$@item.PrecioVenta.ToString("0.00")</td>
+                        <td>@item.StockMinimo</td>
+                        <td><span class="status-badge @(item.Activo ? "status-active" : "status-inactive")">@(item.Activo ? "Activa" : "Inactiva")</span></td>
+                        <td><div class="table-actions">
+                            <a asp-action="detalles" asp-route-id="@item.IdVariante" class="action-button action-view"><svg class="md-icon"><use href="#icon-view"></use></svg><span>Ver</span></a>
+                            <a asp-action="editar" asp-route-id="@item.IdVariante" class="action-button action-edit"><svg class="md-icon"><use href="#icon-edit"></use></svg><span>Editar</span></a>
+                            <a asp-action="eliminar" asp-route-id="@item.IdVariante" class="action-button action-delete"><svg class="md-icon"><use href="#icon-delete"></use></svg><span>Eliminar</span></a>
+                        </div></td>
+                    </tr>
+                }
+            }
+            </tbody>
+        </table>
+    </div>
+</section>

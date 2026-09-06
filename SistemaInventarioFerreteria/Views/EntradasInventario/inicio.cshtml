@@ -1,0 +1,174 @@
+﻿@model IEnumerable<SistemaInventarioFerreteria.Models.EntradaInventario>
+
+@{
+    ViewData["Title"] = "Entradas de inventario";
+    var totalUnidades = Model.Sum(e => e.Cantidad);
+    var totalInvertido =
+        Model.Sum(e => e.Cantidad * e.CostoUnitario);
+}
+
+<header class="page-header">
+    <div class="page-heading">
+        <span class="eyebrow">Operaciones</span>
+        <h1>Entradas de inventario</h1>
+        <p>Registra y consulta los ingresos de mercadería por variante y sucursal.</p>
+    </div>
+
+    <div class="page-actions">
+        <a asp-action="crear" class="btn btn-primary">
+            <svg class="md-icon"><use href="#icon-plus"></use></svg>
+            Registrar entrada
+        </a>
+    </div>
+</header>
+
+<section class="metric-grid" aria-label="Resumen de entradas">
+    <article class="metric-card">
+        <div class="metric-copy">
+            <span class="metric-label">Entradas</span>
+            <strong class="metric-value">@Model.Count()</strong>
+            <span class="metric-note">Movimientos registrados</span>
+        </div>
+        <span class="metric-icon">
+            <svg class="md-icon"><use href="#icon-in"></use></svg>
+        </span>
+    </article>
+
+    <article class="metric-card">
+        <div class="metric-copy">
+            <span class="metric-label">Unidades ingresadas</span>
+            <strong class="metric-value">@totalUnidades</strong>
+            <span class="metric-note">Suma de cantidades</span>
+        </div>
+        <span class="metric-icon">
+            <svg class="md-icon"><use href="#icon-package"></use></svg>
+        </span>
+    </article>
+
+    <article class="metric-card">
+        <div class="metric-copy">
+            <span class="metric-label">Costo acumulado</span>
+            <strong class="metric-value">
+                $@totalInvertido.ToString("N2")
+            </strong>
+            <span class="metric-note">Cantidad por costo unitario</span>
+        </div>
+        <span class="metric-icon">
+            <svg class="md-icon"><use href="#icon-report"></use></svg>
+        </span>
+    </article>
+</section>
+
+<section class="contenedor-tabla">
+    <div class="titulo-tabla">
+        <div>
+            <h2>Historial de entradas</h2>
+            <p>Detalle de cada ingreso registrado en el sistema.</p>
+        </div>
+        <span class="status-badge status-active">
+            @Model.Count() registros
+        </span>
+    </div>
+
+    <div class="table-scroll">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Fecha</th>
+                    <th>SKU / Producto</th>
+                    <th>Sucursal</th>
+                    <th>Proveedor</th>
+                    <th>Cantidad</th>
+                    <th>Costo unitario</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="8" class="empty-state">
+                            <strong>Aún no hay entradas</strong>
+                            Registra el primer ingreso de mercadería.
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="entity-id">
+                                #@item.IdEntrada
+                            </td>
+                            <td>
+                                @item.Fecha.ToString("dd/MM/yyyy HH:mm")
+                            </td>
+                            <td>
+                                <div class="entity-cell">
+                                    <span class="entity-avatar">
+                                        <svg class="md-icon">
+                                            <use href="#icon-in"></use>
+                                        </svg>
+                                    </span>
+                                    <div>
+                                        <strong>
+                                            @(item.VarianteProducto?.SKU
+                                                ?? "Sin SKU")
+                                        </strong>
+                                        <div class="muted-text">
+                                            @(item.VarianteProducto
+                                                ?.Producto?.Nombre
+                                                ?? "Sin producto")
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                @(item.Sucursal?.Nombre ?? "Sin sucursal")
+                            </td>
+                            <td>
+                                @(item.Proveedor?.Nombre ?? "Sin proveedor")
+                            </td>
+                            <td>@item.Cantidad</td>
+                            <td>
+                                $@item.CostoUnitario.ToString("N2")
+                            </td>
+                            <td>
+                                <div class="table-actions">
+                                    <a asp-action="detalles"
+                                       asp-route-id="@item.IdEntrada"
+                                       class="action-button action-view">
+                                        <svg class="md-icon">
+                                            <use href="#icon-view"></use>
+                                        </svg>
+                                        <span>Ver</span>
+                                    </a>
+
+                                    <a asp-action="editar"
+                                       asp-route-id="@item.IdEntrada"
+                                       class="action-button action-edit">
+                                        <svg class="md-icon">
+                                            <use href="#icon-edit"></use>
+                                        </svg>
+                                        <span>Editar</span>
+                                    </a>
+
+                                    <a asp-action="eliminar"
+                                       asp-route-id="@item.IdEntrada"
+                                       class="action-button action-delete">
+                                        <svg class="md-icon">
+                                            <use href="#icon-delete"></use>
+                                        </svg>
+                                        <span>Eliminar</span>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</section>

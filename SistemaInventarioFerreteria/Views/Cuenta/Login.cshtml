@@ -1,0 +1,48 @@
+@model SistemaInventarioFerreteria.Models.LoginViewModel
+@{ Layout = null; }
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Iniciar sesión · Inventario Ferretería</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <main class="login-page">
+        <section class="login-card">
+            <div class="login-brand" aria-hidden="true"><strong>IF</strong></div>
+            <h1>Bienvenido</h1>
+            <p>Ingresa para administrar el inventario de la ferretería.</p>
+
+            <form asp-action="Login" method="post">
+                <div asp-validation-summary="ModelOnly" class="texto-error"></div>
+                <div class="campo">
+                    <label asp-for="Usuario">Usuario</label>
+                    <input asp-for="Usuario" autocomplete="username" autofocus />
+                    <span asp-validation-for="Usuario" class="texto-error"></span>
+                </div>
+                <div class="campo">
+                    <label asp-for="Contrasena">Contraseña</label>
+                    <input asp-for="Contrasena" autocomplete="current-password" />
+                    <span asp-validation-for="Contrasena" class="texto-error"></span>
+                </div>
+                <div class="campo-check">
+                    <input asp-for="Recordarme" />
+                    <label asp-for="Recordarme">Mantener sesión iniciada</label>
+                </div>
+                <button type="submit" class="boton-guardar">Iniciar sesión</button>
+            </form>
+
+            <div class="login-help">
+                Demostración: <strong>admin / Admin123*</strong><br />
+                Operador: <strong>operador / Operador123*</strong>
+            </div>
+        </section>
+    </main>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+</body>
+</html>

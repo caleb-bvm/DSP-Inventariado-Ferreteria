@@ -1,0 +1,66 @@
+﻿@model SistemaInventarioFerreteria.Models.Inventario
+
+@{
+    ViewData["Title"] = "Editar inventario";
+}
+
+<div class="formulario-contenedor">
+    <div class="formulario-encabezado">
+        <h1>Editar inventario</h1>
+        <p>Actualiza la variante, sucursal o cantidad del registro.</p>
+    </div>
+
+    <div class="formulario-tarjeta">
+        <form asp-action="editar"
+              asp-route-id="@Model.IdInventario"
+              method="post">
+
+            <input type="hidden" asp-for="IdInventario" />
+
+            <div asp-validation-summary="ModelOnly"
+                 class="texto-error"></div>
+
+            <div class="campo">
+                <label asp-for="IdVariante">Variante</label>
+                <select asp-for="IdVariante"
+                        asp-items="ViewBag.Variantes">
+                    <option value="">Seleccione una variante</option>
+                </select>
+                <span asp-validation-for="IdVariante"
+                      class="texto-error"></span>
+            </div>
+
+            <div class="campo">
+                <label asp-for="IdSucursal">Sucursal</label>
+                <select asp-for="IdSucursal"
+                        asp-items="ViewBag.Sucursales">
+                    <option value="">Seleccione una sucursal</option>
+                </select>
+                <span asp-validation-for="IdSucursal"
+                      class="texto-error"></span>
+            </div>
+
+            <div class="campo">
+                <label asp-for="Cantidad">Cantidad</label>
+                <input asp-for="Cantidad"
+                       type="number"
+                       min="0" />
+                <span asp-validation-for="Cantidad"
+                      class="texto-error"></span>
+            </div>
+
+            <div class="botones-formulario">
+                <button type="submit" class="boton-guardar">
+                    Guardar cambios
+                </button>
+                <a asp-action="inicio" class="boton-regresar">
+                    Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

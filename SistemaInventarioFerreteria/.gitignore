@@ -1,0 +1,7 @@
+.nuget/
+.vs/
+bin/
+obj/
+App_Data/Keys/
+*.user
+/appsettings.json

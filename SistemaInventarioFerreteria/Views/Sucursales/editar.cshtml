@@ -1,0 +1,44 @@
+@model SistemaInventarioFerreteria.Models.Sucursal
+
+@{
+    ViewData["Title"] = "Editar Sucursal";
+}
+
+<div class="formulario-contenedor">
+    <div class="formulario-encabezado">
+        <h1>Editar sucursal</h1>
+        <p>Actualiza los datos de la sucursal seleccionada.</p>
+    </div>
+
+    <div class="formulario-tarjeta">
+        <form asp-action="editar" asp-route-id="@Model.IdSucursal" method="post">
+            <input type="hidden" asp-for="IdSucursal" />
+            <div asp-validation-summary="ModelOnly" class="texto-error"></div>
+
+            <div class="campo">
+                <label asp-for="Nombre">Nombre de la sucursal</label>
+                <input asp-for="Nombre" maxlength="120" />
+                <span asp-validation-for="Nombre" class="texto-error"></span>
+            </div>
+            <div class="campo">
+                <label asp-for="Direccion">Dirección</label>
+                <textarea asp-for="Direccion" maxlength="250"></textarea>
+                <span asp-validation-for="Direccion" class="texto-error"></span>
+            </div>
+            <div class="campo">
+                <label asp-for="Telefono">Teléfono</label>
+                <input asp-for="Telefono" type="tel" maxlength="20" />
+                <span asp-validation-for="Telefono" class="texto-error"></span>
+            </div>
+            <div class="campo-check">
+                <input asp-for="Activo" type="checkbox" />
+                <label asp-for="Activo">Sucursal activa</label>
+            </div>
+
+            <div class="botones-formulario">
+                <button type="submit" class="boton-guardar">Guardar cambios</button>
+                <a asp-action="inicio" class="boton-regresar">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>

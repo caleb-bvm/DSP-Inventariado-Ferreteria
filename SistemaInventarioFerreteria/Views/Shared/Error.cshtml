@@ -1,0 +1,28 @@
+@model ErrorViewModel
+
+@{
+    ViewData["Title"] = "No pudimos completar la solicitud";
+}
+
+<section class="error-page">
+    <div class="error-card">
+        <span class="error-icon" aria-hidden="true">
+            <svg class="md-icon"><use href="#icon-warning"></use></svg>
+        </span>
+        <span class="eyebrow">Algo salió mal</span>
+        <h1>No pudimos completar la solicitud.</h1>
+        <p>Intenta nuevamente. Si el problema continúa, vuelve al inicio y revisa la información desde allí.</p>
+
+        @if (Model.ShowRequestId)
+        {
+            <span class="request-id">Referencia: @Model.RequestId</span>
+        }
+
+        <div class="page-actions">
+            <a asp-controller="Home" asp-action="Index" class="btn btn-primary">
+                <svg class="md-icon"><use href="#icon-home"></use></svg>
+                Volver al inicio
+            </a>
+        </div>
+    </div>
+</section>

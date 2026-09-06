@@ -1,0 +1,16 @@
+@model SistemaInventarioFerreteria.Models.Venta
+@{ ViewData["Title"] = "Eliminar venta"; var detalle = Model.Detalles.FirstOrDefault(); }
+
+<div class="formulario-contenedor">
+    <div class="formulario-encabezado"><h1>Eliminar venta #@Model.IdVenta</h1><p>Al eliminarla se devolverá la cantidad al inventario.</p></div>
+    <div class="formulario-tarjeta">
+        <div asp-validation-summary="ModelOnly" class="texto-error"></div>
+        <div class="mensaje-eliminar"><h2>¿Deseas eliminar esta venta?</h2><p>Esta acción no se puede deshacer.</p></div>
+        <div class="detalle-fila"><span class="detalle-etiqueta">Producto</span><strong class="detalle-valor">@detalle?.VarianteProducto?.Producto?.Nombre</strong></div>
+        <div class="detalle-fila"><span class="detalle-etiqueta">Cantidad</span><strong class="detalle-valor">@detalle?.Cantidad</strong></div>
+        <div class="detalle-fila"><span class="detalle-etiqueta">Total</span><strong class="detalle-valor">$@Model.Total.ToString("0.00")</strong></div>
+        <form asp-action="eliminar" asp-route-id="@Model.IdVenta" method="post" class="botones-formulario">
+            <button type="submit" class="boton-eliminar-confirmar">Eliminar venta</button><a asp-action="inicio" class="boton-regresar">Cancelar</a>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,319 @@
+@{ ViewData["Title"] = "Asistente IA"; }
+
+<header class="page-header assistant-page-header">
+    <div class="page-heading">
+        <span class="eyebrow">Consulta de solo lectura</span>
+        <h1>Asistente de inventario</h1>
+        <p>Analiza disponibilidad, reposición y alertas con los datos actuales del sistema.</p>
+    </div>
+</header>
+
+<div class="assistant-layout">
+    <section class="panel-inicio assistant-panel assistant-query-panel" aria-labelledby="assistant-query-title">
+        <header class="assistant-panel-heading">
+            <span class="assistant-step" aria-hidden="true">01</span>
+            <div>
+                <h2 id="assistant-query-title">Prepara tu consulta</h2>
+                <p>Elige el contexto y formula lo que necesitas saber.</p>
+            </div>
+        </header>
+
+        <div class="assistant-prompts">
+            <span class="assistant-section-label">Consultas rápidas</span>
+            <div class="question-buttons" aria-label="Plantillas de consulta">
+                <button type="button" class="question-button" data-question="¿Cuántas unidades hay disponibles?" aria-pressed="false">
+                    <svg class="md-icon" aria-hidden="true"><use href="#icon-package"></use></svg>
+                    <span>Disponibilidad</span>
+                </button>
+                <button type="button" class="question-button" data-question="Explica la recomendación de reposición" aria-pressed="false">
+                    <svg class="md-icon" aria-hidden="true"><use href="#icon-in"></use></svg>
+                    <span>Reposición</span>
+                </button>
+                <button type="button" class="question-button" data-question="Resume las alertas de stock bajo" aria-pressed="false">
+                    <svg class="md-icon" aria-hidden="true"><use href="#icon-warning"></use></svg>
+                    <span>Alertas de stock</span>
+                </button>
+            </div>
+        </div>
+
+        <form id="assistant-form" novalidate>
+            @Html.AntiForgeryToken()
+
+            <fieldset class="assistant-fieldset">
+                <legend class="assistant-section-label">Contexto del inventario</legend>
+                <div class="campo">
+                    <label for="branch">Sucursal <span aria-hidden="true">*</span></label>
+                    <select id="branch" asp-items="ViewBag.Sucursales" required>
+                        <option value="">Seleccione una sucursal</option>
+                    </select>
+                </div>
+                <div class="campo">
+                    <label for="variant">Variante <span class="optional-label">Opcional</span></label>
+                    <select id="variant" asp-items="ViewBag.Variantes">
+                        <option value="">Todas las variantes</option>
+                    </select>
+                </div>
+            </fieldset>
+
+            <div class="campo assistant-question-field">
+                <div class="assistant-field-label">
+                    <label for="question">Pregunta <span aria-hidden="true">*</span></label>
+                    <span id="question-count" class="question-count">0 / 300</span>
+                </div>
+                <textarea id="question" rows="4" maxlength="300" required placeholder="Ejemplo: ¿cuántas unidades debo reponer esta semana?"></textarea>
+            </div>
+
+            <p id="assistant-validation" class="assistant-validation is-hidden" role="alert"></p>
+
+            <button type="submit" class="boton-guardar assistant-submit" id="assistant-submit">
+                <span>Consultar inventario</span>
+                <svg class="md-icon" aria-hidden="true"><use href="#icon-arrow"></use></svg>
+            </button>
+
+            <p class="assistant-form-note">
+                <svg class="md-icon" aria-hidden="true"><use href="#icon-check"></use></svg>
+                La consulta analiza información; nunca modifica existencias.
+            </p>
+        </form>
+    </section>
+
+    <section class="panel-inicio assistant-panel assistant-answer" aria-labelledby="assistant-result-title" aria-busy="false">
+        <header class="assistant-result-header">
+            <div>
+                <span class="assistant-step" aria-hidden="true">02</span>
+                <div>
+                    <h2 id="assistant-result-title">Resultado</h2>
+                    <p>Recomendación, evidencia y cálculo en una sola vista.</p>
+                </div>
+            </div>
+            <span id="assistant-status" class="status-badge status-inactive" aria-live="polite">Sin consulta</span>
+        </header>
+
+        <div id="assistant-empty" class="assistant-empty-state">
+            <span class="assistant-empty-icon" aria-hidden="true">
+                <svg class="md-icon"><use href="#icon-report"></use></svg>
+            </span>
+            <strong id="assistant-empty-title">Tu análisis aparecerá aquí</strong>
+            <p id="assistant-empty-copy">Selecciona una sucursal y escribe una pregunta para comenzar.</p>
+        </div>
+
+        <div id="assistant-result" class="assistant-result is-hidden">
+            <section class="answer-block answer-block-primary" aria-labelledby="answer-heading">
+                <header class="answer-label">
+                    <span class="answer-icon" aria-hidden="true"><svg class="md-icon"><use href="#icon-report"></use></svg></span>
+                    <strong id="answer-heading">Recomendación</strong>
+                </header>
+                <div id="answer-text" class="answer-content"></div>
+            </section>
+
+            <div class="answer-support-grid">
+                <section class="answer-block" aria-labelledby="evidence-heading">
+                    <header class="answer-label">
+                        <span class="answer-icon" aria-hidden="true"><svg class="md-icon"><use href="#icon-check"></use></svg></span>
+                        <strong id="evidence-heading">Evidencia utilizada</strong>
+                    </header>
+                    <div id="evidence-text" class="answer-content"></div>
+                </section>
+
+                <section class="answer-block" aria-labelledby="calculation-heading">
+                    <header class="answer-label">
+                        <span class="answer-icon" aria-hidden="true"><svg class="md-icon"><use href="#icon-in"></use></svg></span>
+                        <strong id="calculation-heading">Cálculo fuente</strong>
+                    </header>
+                    <div id="calculation-text" class="answer-content"></div>
+                </section>
+            </div>
+
+            <footer class="answer-notice">
+                <svg class="md-icon" aria-hidden="true"><use href="#icon-check"></use></svg>
+                <span id="notice-text"></span>
+            </footer>
+        </div>
+    </section>
+</div>
+
+@section Scripts {
+<script>
+    (() => {
+        const form = document.getElementById('assistant-form');
+        const branch = document.getElementById('branch');
+        const variant = document.getElementById('variant');
+        const question = document.getElementById('question');
+        const questionCount = document.getElementById('question-count');
+        const validation = document.getElementById('assistant-validation');
+        const answerPanel = document.querySelector('.assistant-answer');
+        const resultHeader = document.querySelector('.assistant-result-header');
+        const empty = document.getElementById('assistant-empty');
+        const emptyTitle = document.getElementById('assistant-empty-title');
+        const emptyCopy = document.getElementById('assistant-empty-copy');
+        const result = document.getElementById('assistant-result');
+        const status = document.getElementById('assistant-status');
+        const submitButton = document.getElementById('assistant-submit');
+        const submitLabel = submitButton.querySelector('span');
+        const promptButtons = document.querySelectorAll('[data-question]');
+
+        const setStatus = (text, className) => {
+            status.textContent = text;
+            status.className = `status-badge ${className}`;
+        };
+
+        const updateCounter = () => {
+            questionCount.textContent = `${question.value.length} / 300`;
+        };
+
+        const setValidation = (message, field) => {
+            validation.textContent = message;
+            validation.classList.toggle('is-hidden', !message);
+            [branch, question].forEach(input => input.removeAttribute('aria-invalid'));
+
+            if (field) {
+                field.setAttribute('aria-invalid', 'true');
+                field.focus();
+            }
+        };
+
+        const appendParagraph = (container, text, emphasized = false) => {
+            const paragraph = document.createElement('p');
+            paragraph.textContent = text;
+            if (emphasized) paragraph.className = 'answer-lead';
+            container.appendChild(paragraph);
+        };
+
+        const renderStructuredText = (container, text) => {
+            container.replaceChildren();
+            const lines = String(text || 'Sin información disponible.').split(/\r?\n/);
+            let list = null;
+
+            lines.forEach(rawLine => {
+                const line = rawLine.trim();
+                if (!line) {
+                    list = null;
+                    return;
+                }
+
+                if (line.startsWith('- ')) {
+                    if (!list) {
+                        list = document.createElement('ul');
+                        list.className = 'answer-list';
+                        container.appendChild(list);
+                    }
+                    const item = document.createElement('li');
+                    item.textContent = line.slice(2);
+                    list.appendChild(item);
+                    return;
+                }
+
+                list = null;
+                appendParagraph(container, line, line.endsWith(':') || line.startsWith('Resultado:'));
+            });
+        };
+
+        const renderEvidence = (container, text) => {
+            const facts = String(text || '').split(';').map(item => item.trim()).filter(Boolean);
+            if (facts.length < 2) {
+                renderStructuredText(container, text);
+                return;
+            }
+
+            container.replaceChildren();
+            const list = document.createElement('ul');
+            list.className = 'evidence-list';
+            facts.forEach(fact => {
+                const item = document.createElement('li');
+                item.textContent = fact;
+                list.appendChild(item);
+            });
+            container.appendChild(list);
+        };
+
+        promptButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                promptButtons.forEach(item => item.setAttribute('aria-pressed', String(item === button)));
+                question.value = button.dataset.question;
+                updateCounter();
+                setValidation('', null);
+                question.focus();
+            });
+        });
+
+        question.addEventListener('input', () => {
+            updateCounter();
+            if (question.value.trim()) setValidation('', null);
+            promptButtons.forEach(item => item.setAttribute('aria-pressed', 'false'));
+        });
+
+        branch.addEventListener('change', () => {
+            if (branch.value) setValidation('', null);
+        });
+
+        form.addEventListener('submit', async event => {
+            event.preventDefault();
+
+            if (!branch.value) {
+                setValidation('Selecciona una sucursal para consultar el inventario.', branch);
+                return;
+            }
+
+            if (!question.value.trim()) {
+                setValidation('Escribe una pregunta o utiliza una consulta rápida.', question);
+                return;
+            }
+
+            setValidation('', null);
+            empty.classList.remove('is-hidden');
+            empty.classList.add('is-loading');
+            emptyTitle.textContent = 'Analizando inventario';
+            emptyCopy.textContent = 'Estamos revisando existencias, movimientos y niveles de stock.';
+            result.classList.add('is-hidden');
+            setStatus('Analizando', 'status-warning');
+            answerPanel.setAttribute('aria-busy', 'true');
+            submitButton.disabled = true;
+            submitLabel.textContent = 'Consultando...';
+
+            try {
+                const response = await fetch('/api/ia/preguntar', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': form.querySelector('[name="__RequestVerificationToken"]').value
+                    },
+                    body: JSON.stringify({
+                        pregunta: question.value.trim(),
+                        idSucursal: Number(branch.value),
+                        idVariante: Number(variant.value) || null
+                    })
+                });
+
+                if (!response.ok) throw new Error();
+                const data = await response.json();
+
+                renderStructuredText(document.getElementById('answer-text'), data.respuesta);
+                renderEvidence(document.getElementById('evidence-text'), data.evidencia);
+                renderStructuredText(document.getElementById('calculation-text'), data.calculo);
+                document.getElementById('notice-text').textContent = data.aviso;
+
+                empty.classList.add('is-hidden');
+                result.classList.remove('is-hidden');
+                setStatus('Análisis listo', 'status-active');
+
+                if (window.matchMedia('(max-width: 820px)').matches) {
+                    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                    resultHeader.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'start' });
+                }
+            } catch {
+                empty.classList.remove('is-loading');
+                emptyTitle.textContent = 'No pudimos completar la consulta';
+                emptyCopy.textContent = 'Revisa la selección e inténtalo nuevamente.';
+                setStatus('Error de consulta', 'status-warning');
+            } finally {
+                empty.classList.remove('is-loading');
+                answerPanel.setAttribute('aria-busy', 'false');
+                submitButton.disabled = false;
+                submitLabel.textContent = 'Consultar inventario';
+            }
+        });
+
+        updateCounter();
+    })();
+</script>
+}

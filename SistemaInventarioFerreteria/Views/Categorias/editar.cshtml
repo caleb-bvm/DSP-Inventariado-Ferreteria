@@ -1,0 +1,76 @@
+﻿@model SistemaInventarioFerreteria.Models.Categoria
+
+@{
+    ViewData["Title"] = "Editar Categoría";
+}
+
+<div class="formulario-contenedor">
+
+    <div class="formulario-encabezado">
+
+        <h1>Editar categoría</h1>
+
+        <p>
+            Modifica la información de la categoría seleccionada.
+        </p>
+
+    </div>
+
+    <div class="formulario-tarjeta">
+
+        <form asp-action="editar" method="post">
+
+            <input type="hidden"
+                   asp-for="IdCategoria" />
+
+            <div asp-validation-summary="ModelOnly"
+                 class="texto-error">
+            </div>
+
+            <div class="campo">
+
+                <label asp-for="Nombre">
+                    Nombre de la categoría
+                </label>
+
+                <input asp-for="Nombre" />
+
+                <span asp-validation-for="Nombre"
+                      class="texto-error">
+                </span>
+
+            </div>
+
+            <div class="campo">
+
+                <label asp-for="Descripcion">
+                    Descripción
+                </label>
+
+                <textarea asp-for="Descripcion"></textarea>
+
+                <span asp-validation-for="Descripcion"
+                      class="texto-error">
+                </span>
+
+            </div>
+
+            <div class="botones-formulario">
+
+                <button type="submit"
+                        class="boton-guardar">
+                    Actualizar categoría
+                </button>
+
+                <a asp-action="inicio"
+                   class="boton-regresar">
+                    Cancelar
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>

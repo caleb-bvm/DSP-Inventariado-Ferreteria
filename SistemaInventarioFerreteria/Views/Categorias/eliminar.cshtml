@@ -1,0 +1,73 @@
+﻿@model SistemaInventarioFerreteria.Models.Categoria
+
+@{
+    ViewData["Title"] = "Eliminar Categoría";
+}
+
+<div class="formulario-contenedor">
+
+    <div class="formulario-encabezado">
+
+        <h1>Eliminar categoría</h1>
+
+        <p>
+            Confirma la eliminación de la categoría seleccionada.
+        </p>
+
+    </div>
+
+    <div class="formulario-tarjeta">
+
+        <div class="advertencia-eliminar">
+            ¿Está seguro que desea eliminar esta categoría?
+            Esta acción no se puede deshacer.
+        </div>
+
+        <div class="detalle-grupo">
+
+            <span>
+                Nombre
+            </span>
+
+            <strong>
+                @Model.Nombre
+            </strong>
+
+        </div>
+
+        <div class="detalle-grupo">
+
+            <span>
+                Descripción
+            </span>
+
+            <strong>
+                @Model.Descripcion
+            </strong>
+
+        </div>
+
+        <form asp-action="eliminar" method="post">
+
+            <input type="hidden"
+                   asp-for="IdCategoria" />
+
+            <div class="botones-formulario">
+
+                <button type="submit"
+                        class="boton-eliminar-confirmar">
+                    Eliminar categoría
+                </button>
+
+                <a asp-action="inicio"
+                   class="boton-regresar">
+                    Cancelar
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>

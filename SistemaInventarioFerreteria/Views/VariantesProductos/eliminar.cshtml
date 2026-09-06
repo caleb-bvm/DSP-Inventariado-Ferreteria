@@ -1,0 +1,15 @@
+@model SistemaInventarioFerreteria.Models.VarianteProducto
+@{ ViewData["Title"] = "Eliminar variante"; }
+
+<div class="formulario-contenedor">
+    <div class="formulario-encabezado"><h1>Eliminar variante</h1><p>Confirma la eliminación de @Model.SKU.</p></div>
+    <div class="formulario-tarjeta">
+        <div asp-validation-summary="ModelOnly" class="texto-error"></div>
+        <div class="mensaje-eliminar"><h2>¿Deseas eliminar esta variante?</h2><p>Esta acción no se puede deshacer.</p></div>
+        <div class="detalle-fila"><span class="detalle-etiqueta">SKU</span><strong class="detalle-valor">@Model.SKU</strong></div>
+        <div class="detalle-fila"><span class="detalle-etiqueta">Producto</span><strong class="detalle-valor">@Model.Producto?.Nombre</strong></div>
+        <form asp-action="eliminar" asp-route-id="@Model.IdVariante" method="post" class="botones-formulario">
+            <button type="submit" class="boton-eliminar-confirmar">Eliminar</button><a asp-action="inicio" class="boton-regresar">Cancelar</a>
+        </form>
+    </div>
+</div>
